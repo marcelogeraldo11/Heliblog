@@ -1,0 +1,136 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_TITLE, SITE_DESCRIPTION } from '../consts';
+
+// Obtener todos los posts del blog
+const allPosts = await getCollection('blog');
+
+// Ordenar posts por fecha en orden descendente
+const sortedPosts = allPosts.sort(
+  (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
+// Obtener todos los tags únicos
+const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sort();
+
+// Contar posts por tag
+const tagCounts = {};
+allTags.forEach(tag => {
+  tagCounts[tag] = allPosts.filter(post => post.data.tags?.includes(tag)).length;
+});
+
+// Ordenar tags por cantidad de posts
+const sortedTags = [...allTags].sort((a, b) => tagCounts[b] - tagCounts[a]);
+
+// URL del feed RSS
+const rssUrl = new URL('/rss.xml', Astro.site).toString();
+---
+
+<BaseLayout title="RSS Feed | Heliboss Blog" description="Suscríbete a nuestro feed RSS para recibir las últimas actualizaciones">
+  <div class="max-w-4xl mx-auto px-4 py-12">
+    <div class="text-center mb-12">
+      <h1 class="text-3xl sm:text-4xl font-bold text-zinc-900 dark:text-zinc-100 mb-4">RSS Feed</h1>
+      <p class="text-zinc-600 dark:text-zinc-400 mb-8">Mantente actualizado con nuestro contenido más reciente</p>
+      
+      <div class="flex justify-center mb-8">
+        <a 
+          href="/rss.xml" 
+          class="inline-flex items-center gap-2 px-6 py-3 bg-zinc-900 dark:bg-zinc-100 text-zinc-100 dark:text-zinc-900 rounded-lg hover:bg-zinc-700 dark:hover:bg-zinc-300 transition-all duration-300 font-medium shadow-sm hover:shadow-md hover:scale-105 active:scale-95"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 5c7.18 0 13 5.82 13 13M6 11a7 7 0 017 7m-6 0a1 1 0 11-2 0 1 1 0 012 0z" />
+          </svg>
+          Suscribirse al RSS
+        </a>
+      </div>
+      
+      <div class="text-sm text-zinc-500 dark:text-zinc-400 mb-4">
+        <p>URL del feed: <code class="bg-zinc-100 dark:bg-zinc-800 px-2 py-1 rounded">{rssUrl}</code></p>
+      </div>
+    </div>
+    
+    <div class="mb-12">
+      <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-6">¿Qué es RSS?</h2>
+      <div class="prose prose-zinc dark:prose-invert max-w-none">
+        <p>
+          RSS (Really Simple Syndication) es un formato de feed web utilizado para publicar contenido actualizado frecuentemente, 
+          como entradas de blog, noticias, audio y video en un formato estandarizado.
+        </p>
+        <p>
+          Al suscribirte a nuestro feed RSS, recibirás automáticamente notificaciones cuando publiquemos nuevo contenido, 
+          sin necesidad de visitar regularmente nuestro sitio web.
+        </p>
+        <h3>Cómo usar RSS:</h3>
+        <ol>
+          <li>Descarga un lector de RSS como Feedly, Inoreader, o utiliza la funcionalidad RSS integrada en tu navegador.</li>
+          <li>Añade nuestra URL de RSS a tu lector.</li>
+          <li>¡Listo! Ahora recibirás actualizaciones automáticamente.</li>
+        </ol>
+      </div>
+    </div>
+    
+    <div class="mb-12">
+      <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-6">Contenido Reciente</h2>
+      <ul class="space-y-4">
+        {sortedPosts.slice(0, 5).map(post => (
+          <li class="border-b border-zinc-200 dark:border-zinc-800 pb-4">
+            <a href={`/blog/${post.slug}/`} class="group">
+              <h3 class="text-lg font-medium text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-600 dark:group-hover:text-zinc-300 transition-colors">
+                {post.data.title}
+              </h3>
+              <p class="text-sm text-zinc-500 dark:text-zinc-400 mt-1">
+                {new Date(post.data.pubDate).toLocaleDateString('es-ES', { year: 'numeric', month: 'long', day: 'numeric' })}
+              </p>
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+    
+    <div>
+      <h2 class="text-2xl font-bold text-zinc-900 dark:text-zinc-100 mb-6">Temas Populares</h2>
+      <div class="flex flex-wrap gap-2">
+        {sortedTags.slice(0, 10).map(tag => (
+          <a 
+            href={`/tags/${tag}`}
+            class="inline-flex items-center rounded-lg bg-zinc-100 px-3.5 py-2 text-sm font-medium text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 transition-all duration-300 min-h-[32px] shadow-sm hover:shadow-md hover:scale-105 active:scale-95"
+          >
+            <span class="mr-1 text-zinc-500 dark:text-zinc-400">#</span>{tag}
+            <span class="ml-1 text-xs text-zinc-500 dark:text-zinc-400">({tagCounts[tag]})</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</BaseLayout>
+
+<style>
+  /* Animaciones sutiles */
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  
+  h1, h2, p, .prose, ul, .flex {
+    animation: fadeIn 0.5s ease-out forwards;
+  }
+  
+  h2 {
+    animation-delay: 0.1s;
+  }
+  
+  .prose {
+    animation-delay: 0.2s;
+  }
+  
+  ul {
+    animation-delay: 0.3s;
+  }
+  
+  .flex:last-child {
+    animation-delay: 0.4s;
+  }
+</style>

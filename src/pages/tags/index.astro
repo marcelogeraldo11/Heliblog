@@ -23,7 +23,7 @@ const tagObjects = tags.map(tag => {
 const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
 ---
 
-<BaseLayout title="Explore Tags">
+<BaseLayout title="Explorar Temas">
   <div class="w-full mx-auto px-3 sm:px-6 py-6 sm:py-12 md:py-16 theme-transition-all">
     <!-- Enhanced header section with animated elements - improved for mobile -->
     <div class="relative mb-8 sm:mb-12 md:mb-16 text-center theme-transition-element">
@@ -35,17 +35,17 @@ const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
         <span class="inline-block relative">
           <span class="relative inline-block">
             <span class="absolute -inset-1 rounded-lg bg-gradient-to-r from-zinc-200/50 to-zinc-300/50 dark:from-zinc-800/50 dark:to-zinc-700/50 blur-sm theme-transition-bg"></span>
-            <span class="relative">Explore</span>
+            <span class="relative">Explorar</span>
           </span>
           {" "}
           <span class="relative inline-block">
-            Topics
+            Temas
             <span class="absolute -bottom-1 sm:-bottom-2 left-0 w-full h-0.5 sm:h-1 bg-gradient-to-r from-zinc-400 to-zinc-600 dark:from-zinc-600 dark:to-zinc-400 transform origin-left animate-underline theme-transition-bg"></span>
           </span>
         </span>
       </h1>
       <p class="relative text-sm sm:text-base md:text-lg lg:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto theme-transition-color">
-        Discover content organized by your interests
+        Descubre contenido organizado por tus intereses
       </p>
     </div>
     
@@ -57,8 +57,8 @@ const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
             <path stroke-linecap="round" stroke-linejoin="round" d="M6 6h.008v.008H6V6z" />
           </svg>
         </div>
-        <p class="text-lg sm:text-xl md:text-2xl font-medium text-zinc-800 dark:text-zinc-200 theme-transition-color">No tags found yet.</p>
-        <p class="mt-2 text-xs sm:text-sm md:text-base text-zinc-500 dark:text-zinc-500 theme-transition-color">Check back later for categorized content.</p>
+        <p class="text-lg sm:text-xl md:text-2xl font-medium text-zinc-800 dark:text-zinc-200 theme-transition-color">No se encontraron temas aún.</p>
+        <p class="mt-2 text-xs sm:text-sm md:text-base text-zinc-500 dark:text-zinc-500 theme-transition-color">Vuelve más tarde para contenido categorizado.</p>
       </div>
     ) : (
       <div class="flex justify-center w-full">
@@ -68,28 +68,28 @@ const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
           <div class="absolute -top-8 -right-8 w-20 sm:w-24 md:w-32 lg:w-40 h-20 sm:h-24 md:h-32 lg:h-40 bg-gradient-to-br from-zinc-200/30 to-zinc-300/20 dark:from-zinc-700/20 dark:to-zinc-800/10 rounded-full blur-xl theme-transition-bg"></div>
           <div class="absolute -bottom-8 -left-8 w-20 sm:w-24 md:w-32 lg:w-40 h-20 sm:h-24 md:h-32 lg:h-40 bg-gradient-to-tl from-zinc-200/30 to-zinc-300/20 dark:from-zinc-700/20 dark:to-zinc-800/10 rounded-full blur-xl theme-transition-bg"></div>
           
-          <h2 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-3 sm:mb-4 md:mb-6 lg:mb-8 text-center theme-transition-color">Popular Topics</h2>
+          <h2 class="text-lg sm:text-xl md:text-2xl lg:text-3xl font-bold text-zinc-900 dark:text-zinc-100 mb-3 sm:mb-4 md:mb-6 lg:mb-8 text-center theme-transition-color">Temas Populares</h2>
           
-          <!-- Ultra-responsive grid layout with fallbacks -->
-          <div class="grid grid-cols-2 xxxs:grid-cols-2 xxs:grid-cols-2 xs:grid-cols-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-1.5 xxxs:gap-2 xxs:gap-2 xs:gap-2 sm:gap-3 md:gap-4 w-full">
+          <!-- Ultra-responsive grid layout with improved legibility -->
+          <div class="grid grid-cols-1 xxxs:grid-cols-2 xxs:grid-cols-2 xs:grid-cols-2 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-3 xxxs:gap-3 xxs:gap-3 xs:gap-3 sm:gap-4 md:gap-5 lg:gap-6 w-full">
             {sortedTags.map((tag) => (
               <a 
                 href={`/tags/${tag.name}`}
-                class="group relative overflow-hidden rounded-md sm:rounded-lg md:rounded-xl border border-zinc-200 dark:border-zinc-800 transition-all duration-300 hover:shadow-md sm:hover:shadow-lg hover:scale-[1.03] hover:border-zinc-300 dark:hover:border-zinc-700 active:scale-95 theme-transition-element theme-ripple flex-grow min-w-0"
+                class="group relative overflow-hidden rounded-lg sm:rounded-xl md:rounded-xl border border-zinc-200 dark:border-zinc-800 transition-all duration-300 hover:shadow-md sm:hover:shadow-lg hover:scale-[1.03] hover:border-zinc-300 dark:hover:border-zinc-700 active:scale-95 theme-transition-element theme-ripple flex-grow min-w-0 max-w-full"
                 style={`--tag-hue: ${tag.hue};`}
               >
                 <div class="absolute inset-0 bg-gradient-to-br from-zinc-50/90 to-zinc-100/90 dark:from-zinc-800/90 dark:to-zinc-900/90 opacity-100 group-hover:opacity-95 transition-opacity theme-transition-bg"></div>
                 
-                <div class="relative px-1.5 xxxs:px-2 xxs:px-2 xs:px-2 sm:px-3 md:px-4 py-1.5 xxxs:py-2 xxs:py-2 xs:py-2 sm:py-3 md:py-4 flex items-center gap-1.5 xxs:gap-2 w-full">
-                  <div class="flex-shrink-0 flex items-center justify-center w-5 h-5 xxxs:w-6 xxxs:h-6 xxs:w-6 xxs:h-6 xs:w-7 xs:h-7 sm:w-8 sm:h-8 md:w-10 md:h-10 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 group-hover:bg-accent/20 dark:group-hover:bg-accent/20 group-hover:text-accent-dark dark:group-hover:text-accent-light transition-all duration-300 shadow-sm theme-transition-all">
-                    <span class="text-xs xxxs:text-xs xxs:text-xs xs:text-sm sm:text-base md:text-lg font-semibold">#</span>
+                <div class="relative px-3 xxxs:px-4 xxs:px-4 xs:px-4 sm:px-5 md:px-6 py-3 xxxs:py-4 xxs:py-4 xs:py-4 sm:py-5 md:py-6 flex items-center gap-3 xxs:gap-3 w-full">
+                  <div class="flex-shrink-0 flex items-center justify-center w-8 h-8 xxxs:w-9 xxxs:h-9 xxs:w-10 xxs:h-10 xs:w-10 xs:h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-full bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 group-hover:bg-zinc-200 dark:group-hover:bg-zinc-700 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-all duration-300 shadow-sm theme-transition-all">
+                    <span class="text-base xxxs:text-lg xxs:text-lg xs:text-xl sm:text-2xl md:text-2xl font-semibold">#</span>
                   </div>
                   
                   <div class="flex-1 min-w-0 overflow-hidden">
-                    <h3 class="text-[10px] xxxs:text-xs xxs:text-xs xs:text-xs sm:text-sm md:text-base font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors theme-transition-color break-words hyphens-auto truncate">
+                    <h3 class="text-base xxxs:text-lg xxs:text-lg xs:text-lg sm:text-xl md:text-xl font-bold text-zinc-900 dark:text-zinc-100 group-hover:text-zinc-700 dark:group-hover:text-zinc-300 transition-colors theme-transition-color break-words hyphens-auto">
                       {tag.name}
                     </h3>
-                    <p class="text-[8px] xxxs:text-[9px] xxs:text-[9px] xs:text-[10px] sm:text-xs md:text-xs text-zinc-500 dark:text-zinc-400 theme-transition-color truncate">{tag.count} article{tag.count !== 1 ? 's' : ''}</p>
+                    <p class="text-sm xxxs:text-sm xxs:text-sm xs:text-sm sm:text-base md:text-lg text-zinc-500 dark:text-zinc-400 theme-transition-color">{tag.count} {tag.count === 1 ? 'artículo' : 'artículos'}</p>
                   </div>
                 </div>
               </a>
@@ -339,11 +339,11 @@ const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
     }
     
     .micro-screen h3 {
-      font-size: 0.625rem !important;
+      font-size: 0.875rem !important;
     }
     
     .micro-screen p {
-      font-size: 0.5rem !important;
+      font-size: 0.75rem !important;
     }
   }
   
@@ -380,7 +380,7 @@ const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
     }
     
     .xxxs\:text-\[9px\] {
-      font-size: 9px;
+      font-size: 14px;
     }
   }
   
@@ -417,7 +417,7 @@ const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
     }
     
     .xxs\:text-\[9px\] {
-      font-size: 9px;
+      font-size: 14px;
     }
   }
   
@@ -458,7 +458,7 @@ const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
     }
     
     .xs\:text-\[10px\] {
-      font-size: 10px;
+      font-size: 16px;
     }
   }
   

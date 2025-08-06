@@ -16,7 +16,7 @@ const recentPosts = allPosts
 const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].slice(0, 5);
 ---
 
-<Layout title="Home | Minimal Blog">
+<Layout title="Inicio | Heliboss Blog">
   <!-- Hero Section with improved mobile responsiveness -->
   <section class="py-10 sm:py-16 md:py-20 px-4 sm:px-6 theme-transition-all">
     <div class="max-w-2xl mx-auto relative">
@@ -26,24 +26,24 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
       
       <div class="relative text-center sm:text-left">
         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 theme-transition-color hero-text">
-          <span class="block">Writing on design,</span>
-          <span class="block mt-1">development, and</span>
+          <span class="block">Conoce lo último de</span>
+          <span class="block mt-1">tecnología DJI</span>
           <span class="block mt-1 relative">
             <span class="relative inline-block">
-              digital experiences.
+              y drones profesionales.
               <span class="absolute -bottom-1 left-0 w-full h-1 bg-zinc-800 dark:bg-zinc-200 transform origin-left theme-transition-bg"></span>
             </span>
           </span>
         </h1>
         <p class="mt-4 sm:mt-6 md:mt-8 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed theme-transition-color max-w-lg mx-auto sm:mx-0">
-          Welcome to my corner of the internet. I'm a designer and developer sharing thoughts on creating meaningful digital experiences.
+          Explora el fascinante mundo de la tecnología de drones y cámaras DJI, ofreciendo información detallada sobre los últimos productos, innovaciones y tendencias de la industria.
         </p>
         <div class="mt-6 sm:mt-8 md:mt-10 flex flex-wrap gap-3 sm:gap-4 md:gap-6 justify-center sm:justify-start">
           <a 
-            href="/about" 
+            href="/blog" 
             class="group relative inline-flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:text-zinc-700 dark:hover:text-zinc-300 transition-all duration-300 theme-transition-color min-h-[44px]"
           >
-            <span>More about me</span>
+            <span>Ver último lanzamiento</span>
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
@@ -58,13 +58,13 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
   <section class="py-10 sm:py-12 md:py-16 px-4 sm:px-6 border-t border-zinc-100 dark:border-zinc-800 theme-transition-all">
     <div class="max-w-3xl mx-auto">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 sm:mb-8 md:mb-12">
-        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 theme-transition-color text-center sm:text-left">Recent Posts</h2>
+        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 theme-transition-color text-center sm:text-left">Lanzamientos</h2>
         <a 
           href="/blog" 
           class="group relative text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:text-zinc-700 dark:hover:text-zinc-300 self-center sm:self-auto theme-transition-color min-h-[44px] flex items-center justify-center"
         >
           <span class="flex items-center gap-1">
-            View all posts
+            Ver todos los lanzamientos
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1">
               <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
             </svg>
@@ -97,7 +97,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
                 <FormattedDate date={post.data.pubDate} format="long" />
               </time>
               <span class="relative z-10 rounded-full bg-zinc-100 dark:bg-zinc-800 px-2 sm:px-3 py-1 sm:py-1.5 font-medium text-zinc-600 dark:text-zinc-300 theme-transition-all">
-                {post.data.readingTime || `${Math.ceil(post.body.length / 2000)} min read`}
+                {post.data.readingTime || `${Math.ceil(post.body.length / 2000)} min de lectura`}
               </span>
             </div>
             
@@ -113,18 +113,18 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
             </p>
             
             {post.data.tags && post.data.tags.length > 0 && (
-              <div class="relative z-10 mt-3 sm:mt-4 flex flex-wrap gap-2 justify-center sm:justify-start w-full">
+              <div class="relative z-10 mt-3 sm:mt-4 flex flex-wrap gap-2 justify-center sm:justify-start w-full overflow-hidden">
                 {post.data.tags.slice(0, 3).map(tag => (
                   <a 
                     href={`/tags/${tag}`}
-                    class="inline-flex items-center rounded-full bg-zinc-100 px-2 sm:px-3 py-1 text-xs font-medium text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 transition-colors theme-transition-all min-h-[28px]"
+                    class="inline-flex items-center rounded-lg bg-zinc-100 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 transition-all duration-300 min-h-[28px] sm:min-h-[32px] shadow-sm hover:shadow-md hover:scale-105 active:scale-95 theme-transition-all whitespace-nowrap"
                   >
-                    #{tag}
+                    <span class="mr-1 text-zinc-500 dark:text-zinc-400">#</span>{tag}
                   </a>
                 ))}
                 {post.data.tags.length > 3 && (
                   <span class="inline-flex items-center rounded-full bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-500 dark:bg-zinc-800/50 dark:text-zinc-400 theme-transition-all min-h-[28px]">
-                    +{post.data.tags.length - 3} more
+                    +{post.data.tags.length - 3} más
                   </span>
                 )}
               </div>
@@ -135,8 +135,8 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
               class="relative z-10 mt-3 sm:mt-4 flex items-center text-sm font-medium text-zinc-700 dark:text-zinc-300 group-hover:text-zinc-900 dark:group-hover:text-zinc-100 transition-colors theme-transition-color mx-auto sm:mx-0 min-h-[44px]"
             >
               <span class="relative overflow-hidden inline-block">
-                <span class="group-hover:-translate-y-full block transition-transform duration-300">Read article</span>
-                <span class="absolute top-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 whitespace-nowrap">Explore now</span>
+                <span class="group-hover:-translate-y-full block transition-transform duration-300">Leer artículo</span>
+                <span class="absolute top-0 left-0 translate-y-full group-hover:translate-y-0 transition-transform duration-300 whitespace-nowrap">Explorar ahora</span>
               </span>
               <svg viewBox="0 0 16 16" fill="none" aria-hidden="true" class="ml-1 h-4 w-4 stroke-current transition-transform duration-300 group-hover:translate-x-1">
                 <path d="M6.75 5.75 9.25 8l-2.5 2.25" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"></path>
@@ -148,49 +148,34 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
     </div>
   </section>
 
-  <!-- Topics/Tags Section - Improved for mobile -->
-  {allTags.length > 0 && (
-    <section class="py-10 sm:py-12 md:py-16 px-4 sm:px-6 border-t border-zinc-100 dark:border-zinc-800 theme-transition-all">
-      <div class="max-w-3xl mx-auto">
-        <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 mb-6 sm:mb-8 theme-transition-color text-center sm:text-left">Explore Topics</h2>
+  <!-- Asesoría Section - Improved for mobile -->
+  <section class="py-10 sm:py-12 md:py-16 px-4 sm:px-6 border-t border-zinc-100 dark:border-zinc-800 theme-transition-all">
+    <div class="max-w-3xl mx-auto">
+      <h2 class="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 mb-6 sm:mb-8 theme-transition-color text-center">¿Necesitas asesoría?</h2>
+      
+      <div class="text-center">
+        <p class="text-base sm:text-lg text-zinc-600 dark:text-zinc-400 mb-6 sm:mb-8 theme-transition-color">
+          Contactanos y resuelve tus dudas con nuestro equipo especializado.
+        </p>
         
-        <!-- Improved grid layout for mobile -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4 max-w-xs sm:max-w-none mx-auto">
-          {allTags.map(tag => {
-            const tagCount = allPosts.filter(post => post.data.tags && post.data.tags.includes(tag)).length;
-            return (
-              <a 
-                href={`/tags/${tag}`}
-                class="group flex flex-col p-3 sm:p-4 md:p-6 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:bg-zinc-50 dark:hover:bg-zinc-800/70 transition-all duration-300 theme-transition-all min-h-[80px] sm:min-h-[90px]"
-              >
-                <div class="flex items-start justify-between mb-2">
-                  <span class="text-sm font-medium text-zinc-900 dark:text-zinc-100 theme-transition-color mr-2">#{tag}</span>
-                  <span class="text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-500 dark:text-zinc-400 px-2 py-0.5 rounded-full flex-shrink-0 theme-transition-all">
-                    {tagCount} {tagCount === 1 ? 'post' : 'posts'}
-                  </span>
-                </div>
-                <p class="text-xs text-zinc-600 dark:text-zinc-400 mt-1 theme-transition-color">
-                  Explore articles about {tag}
-                </p>
-              </a>
-            )
-          })}
-        </div>
-        
-        <div class="mt-6 sm:mt-8 text-center">
+        <div class="flex flex-col sm:flex-row gap-4 justify-center items-center">
           <a 
-            href="/tags" 
-            class="inline-flex items-center text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:text-zinc-700 dark:hover:text-zinc-300 theme-transition-color min-h-[44px]"
+            href="mailto:industrial@heliboss.cl" 
+            class="group relative inline-flex items-center gap-2 text-sm font-medium text-zinc-900 dark:text-zinc-100 hover:text-zinc-700 dark:hover:text-zinc-300 transition-all duration-300 theme-transition-color min-h-[44px] px-6 py-3 bg-zinc-100 dark:bg-zinc-800 rounded-lg hover:bg-zinc-200 dark:hover:bg-zinc-700"
           >
-            <span>View all topics</span>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 ml-1 transition-transform duration-300 group-hover:translate-x-1">
-              <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 4.5L21 12m0 0l-7.5 7.5M21 12H3" />
+            <span>Contactanos</span>
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-4 h-4 transition-transform duration-300 group-hover:translate-x-1">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 6.75v10.5a2.25 2.25 0 01-2.25 2.25h-15a2.25 2.25 0 01-2.25-2.25V6.75m19.5 0A2.25 2.25 0 0019.5 4.5h-15a2.25 2.25 0 00-2.25 2.25m19.5 0v.243a2.25 2.25 0 01-1.07 1.916l-7.5 4.615a2.25 2.25 0 01-2.36 0L3.32 8.91a2.25 2.25 0 01-1.07-1.916V6.75" />
             </svg>
           </a>
+          
+          <div class="text-sm text-zinc-500 dark:text-zinc-400">
+            <p>industrial@heliboss.cl</p>
+          </div>
         </div>
       </div>
-    </section>
-  )}
+    </div>
+  </section>
 </Layout>
 
 <script>

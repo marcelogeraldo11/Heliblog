@@ -55,7 +55,7 @@ const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags || []))];
                   <img
                     src={sortedPosts[0].data.heroImage}
                     alt={sortedPosts[0].data.title}
-                    class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+                    class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                     loading="eager"
                   />
                 </div>
@@ -151,7 +151,7 @@ const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags || []))];
                       <img
                         src={post.data.heroImage}
                         alt={post.data.title}
-                        class="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-700 group-hover:scale-105"
+                        class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                         loading="lazy"
                       />
                     </div>

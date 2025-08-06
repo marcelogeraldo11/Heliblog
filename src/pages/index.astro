@@ -26,9 +26,9 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
       
       <div class="relative text-center sm:text-left">
         <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 theme-transition-color hero-text">
-          <span class="block">Conoce lo último de</span>
-          <span class="block mt-1">tecnología DJI</span>
-          <span class="block mt-1 relative">
+          <span id="hero-span-1" class="block">Conoce lo último de</span>
+          <span id="hero-span-2" class="block mt-1">tecnología DJI</span>
+          <span id="hero-span-3" class="block mt-1 relative">
             <span class="relative inline-block">
               y drones profesionales.
               <span class="absolute -bottom-1 left-0 w-full h-1 bg-zinc-800 dark:bg-zinc-200 transform origin-left theme-transition-bg"></span>
@@ -415,6 +415,41 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
   document.addEventListener('page-transition-complete', setupSPATransitions);
 </script>
 
+<script>
+  function animateHeroSpans() {
+    const spans = document.querySelectorAll('#hero-span-1, #hero-span-2, #hero-span-3');
+    
+    spans.forEach((span, index) => {
+      // Aplicar animaciones de entrada con diferentes delays
+      setTimeout(() => {
+        span.classList.add('hero-span-animate');
+      }, 300 + (index * 500));
+      
+      // Agregar efectos hover
+      span.addEventListener('mouseenter', () => {
+        span.classList.add('hero-span-hover');
+      });
+      
+      span.addEventListener('mouseleave', () => {
+        span.classList.remove('hero-span-hover');
+      });
+    });
+    
+    // Iniciar animación de flotación después de las animaciones de entrada
+    setTimeout(() => {
+      spans.forEach(span => {
+        span.classList.add('hero-span-float');
+      });
+    }, 2500);
+  }
+
+  // Inicializar animaciones cuando la página carga
+  document.addEventListener('DOMContentLoaded', animateHeroSpans);
+  
+  // Re-inicializar en transiciones de Astro
+  document.addEventListener('astro:page-load', animateHeroSpans);
+</script>
+
 <style>
   /* Fix for theme transition issues */
   :global(:root) {
@@ -465,6 +500,91 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
   .animate-reveal {
     opacity: 1 !important;
     transform: translateY(0) !important;
+  }
+  
+  /* Hero spans animations */
+  #hero-span-1, #hero-span-2, #hero-span-3 {
+    opacity: 0;
+    transform: translateY(50px) scale(0.8);
+    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+  
+  #hero-span-1.hero-span-animate {
+    opacity: 1;
+    transform: translateY(0) scale(1) rotateX(0deg);
+    animation: slideInRotate 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+  
+  #hero-span-2.hero-span-animate {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation: slideInElastic 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+  }
+  
+  #hero-span-3.hero-span-animate {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    animation: slideInBounce 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+  
+  /* Hover effects */
+  .hero-span-hover {
+    transform: scale(1.05) !important;
+    transition: transform 0.3s ease !important;
+  }
+  
+  /* Floating animation */
+  .hero-span-float {
+    animation: float 3s ease-in-out infinite;
+  }
+  
+  /* Keyframes */
+  @keyframes slideInRotate {
+    0% {
+      opacity: 0;
+      transform: translateY(50px) rotateX(-90deg) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) rotateX(0deg) scale(1);
+    }
+  }
+  
+  @keyframes slideInElastic {
+    0% {
+      opacity: 0;
+      transform: translateX(-100px) scale(0.8);
+    }
+    60% {
+      transform: translateX(10px) scale(1.05);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) scale(1);
+    }
+  }
+  
+  @keyframes slideInBounce {
+    0% {
+      opacity: 0;
+      transform: translateY(30px) scale(0.9);
+    }
+    50% {
+      transform: translateY(-5px) scale(1.02);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(0) scale(1);
+    }
+  }
+  
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-8px);
+    }
   }
   
   /* Rest of your existing styles... */

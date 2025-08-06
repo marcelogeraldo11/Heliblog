@@ -7,6 +7,37 @@ const sortedPosts = allPosts.sort(
   (a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
 );
 
+// Function to process hero images consistently with BlogPost.astro
+function processHeroImage(heroImage) {
+  if (!heroImage) return null;
+  
+  try {
+    // Check if it's a full URL
+    if (heroImage.startsWith('http')) {
+      return heroImage;
+    } 
+    // Check if it's a relative path
+    else if (heroImage.startsWith('/')) {
+      // If Astro.site exists, use it as base
+      if (Astro.site) {
+        return new URL(heroImage, Astro.site).toString();
+      } 
+      // Otherwise, use the relative path as provided
+      else {
+        return heroImage;
+      }
+    }
+    // Other cases
+    else {
+      return heroImage;
+    }
+  } catch (error) {
+    console.error(`Error processing heroImage: ${heroImage}`, error);
+    // Use original path if there's an error
+    return heroImage;
+  }
+}
+
 // Group posts by year for timeline effect
 const postsByYear = sortedPosts.reduce((acc, post) => {
   const year = new Date(post.data.pubDate).getFullYear();
@@ -53,7 +84,7 @@ const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags || []))];
               {sortedPosts[0].data.heroImage && (
                 <div class="w-full md:w-1/2 h-60 sm:h-80 md:h-96 overflow-hidden mx-auto md:mx-0 max-w-full sm:max-w-md">
                   <img
-                    src={sortedPosts[0].data.heroImage}
+                    src={processHeroImage(sortedPosts[0].data.heroImage)}
                     alt={sortedPosts[0].data.title}
                     class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                     loading="eager"
@@ -149,7 +180,7 @@ const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags || []))];
                   {post.data.heroImage && (
                     <div class="h-48 sm:h-56 overflow-hidden mb-4 rounded-lg">
                       <img
-                        src={post.data.heroImage}
+                        src={processHeroImage(post.data.heroImage)}
                         alt={post.data.title}
                         class="w-full h-full object-cover transition-all duration-700 group-hover:scale-105"
                         loading="lazy"

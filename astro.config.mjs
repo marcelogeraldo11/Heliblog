@@ -4,6 +4,14 @@ import react from '@astrojs/react'; // Add this line
 
 // Determine site URL based on environment
 const getSiteURL = () => {
+  // For Netlify production deployment
+  if (process.env.NETLIFY && process.env.URL) {
+    return process.env.URL;
+  }
+  // For Netlify deploy previews
+  if (process.env.NETLIFY && process.env.DEPLOY_PRIME_URL) {
+    return process.env.DEPLOY_PRIME_URL;
+  }
   // For Vercel production deployment
   if (process.env.VERCEL_URL) {
     return `https://${process.env.VERCEL_URL}`;
@@ -23,4 +31,10 @@ export default defineConfig({
     tailwind(),
     react(),
   ],
+  vite: {
+    assetsInclude: ['**/*.webp', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg']
+  },
+  build: {
+    assets: 'assets'
+  }
 });

@@ -420,27 +420,34 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
     const spans = document.querySelectorAll('#hero-span-1, #hero-span-2, #hero-span-3');
     
     spans.forEach((span, index) => {
-      // Aplicar animaciones de entrada con diferentes delays
+      // Aplicar animaciones de entrada con diferentes delays y efectos
       setTimeout(() => {
         span.classList.add('hero-span-animate');
-      }, 300 + (index * 500));
+      }, 200 + (index * 300));
       
-      // Agregar efectos hover
+      // Agregar efectos hover más dinámicos
       span.addEventListener('mouseenter', () => {
         span.classList.add('hero-span-hover');
+        // Efecto de ondas en hover
+        span.style.setProperty('--hover-scale', '1.08');
+        span.style.setProperty('--hover-rotation', `${Math.random() * 4 - 2}deg`);
       });
       
       span.addEventListener('mouseleave', () => {
         span.classList.remove('hero-span-hover');
+        span.style.removeProperty('--hover-scale');
+        span.style.removeProperty('--hover-rotation');
       });
     });
     
-    // Iniciar animación de flotación después de las animaciones de entrada
+    // Iniciar animación de pulsación sutil después de las animaciones de entrada
     setTimeout(() => {
-      spans.forEach(span => {
-        span.classList.add('hero-span-float');
+      spans.forEach((span, index) => {
+        span.classList.add('hero-span-pulse');
+        // Diferentes velocidades de pulsación para cada span
+        span.style.setProperty('--pulse-duration', `${3 + index * 0.5}s`);
       });
-    }, 2500);
+    }, 1800);
   }
 
   // Inicializar animaciones cuando la página carga
@@ -502,88 +509,114 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
     transform: translateY(0) !important;
   }
   
-  /* Hero spans animations */
+  /* Hero spans animations - Nuevas animaciones más fluidas */
   #hero-span-1, #hero-span-2, #hero-span-3 {
     opacity: 0;
-    transform: translateY(50px) scale(0.8);
-    transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    transform: translateY(60px) scale(0.7) rotateX(-15deg);
+    transition: all 1s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    transform-style: preserve-3d;
+    perspective: 1000px;
   }
   
   #hero-span-1.hero-span-animate {
     opacity: 1;
     transform: translateY(0) scale(1) rotateX(0deg);
-    animation: slideInRotate 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    animation: slideInWave 1.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   }
   
   #hero-span-2.hero-span-animate {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    animation: slideInElastic 1.5s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+    transform: translateY(0) scale(1) rotateX(0deg);
+    animation: slideInSpiral 1.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   }
   
   #hero-span-3.hero-span-animate {
     opacity: 1;
-    transform: translateY(0) scale(1);
-    animation: slideInBounce 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+    transform: translateY(0) scale(1) rotateX(0deg);
+    animation: slideInGlow 1.8s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
   }
   
-  /* Hover effects */
+  /* Hover effects - Más dinámicos */
   .hero-span-hover {
-    transform: scale(1.05) !important;
-    transition: transform 0.3s ease !important;
+    transform: scale(var(--hover-scale, 1.08)) rotate(var(--hover-rotation, 0deg)) !important;
+    transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94) !important;
+    filter: drop-shadow(0 8px 16px rgba(0, 0, 0, 0.15));
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   }
   
-  /* Floating animation */
-  .hero-span-float {
-    animation: float 3s ease-in-out infinite;
+  /* Pulsación sutil */
+  .hero-span-pulse {
+    animation: subtlePulse var(--pulse-duration, 3s) ease-in-out infinite;
   }
   
-  /* Keyframes */
-  @keyframes slideInRotate {
+  /* Nuevas animaciones keyframes más fluidas */
+  @keyframes slideInWave {
     0% {
       opacity: 0;
-      transform: translateY(50px) rotateX(-90deg) scale(0.8);
+      transform: translateY(60px) scale(0.7) rotateX(-15deg) rotateZ(-5deg);
     }
-    100% {
-      opacity: 1;
-      transform: translateY(0) rotateX(0deg) scale(1);
-    }
-  }
-  
-  @keyframes slideInElastic {
-    0% {
-      opacity: 0;
-      transform: translateX(-100px) scale(0.8);
+    30% {
+      opacity: 0.7;
+      transform: translateY(20px) scale(0.95) rotateX(-5deg) rotateZ(2deg);
     }
     60% {
-      transform: translateX(10px) scale(1.05);
+      opacity: 0.9;
+      transform: translateY(-5px) scale(1.02) rotateX(2deg) rotateZ(-1deg);
     }
     100% {
       opacity: 1;
-      transform: translateX(0) scale(1);
+      transform: translateY(0) scale(1) rotateX(0deg) rotateZ(0deg);
     }
   }
   
-  @keyframes slideInBounce {
+  @keyframes slideInSpiral {
     0% {
       opacity: 0;
-      transform: translateY(30px) scale(0.9);
+      transform: translateX(-80px) translateY(40px) scale(0.6) rotate(-180deg);
+    }
+    40% {
+      opacity: 0.8;
+      transform: translateX(15px) translateY(-10px) scale(1.05) rotate(-20deg);
+    }
+    70% {
+      transform: translateX(-5px) translateY(3px) scale(0.98) rotate(5deg);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0) translateY(0) scale(1) rotate(0deg);
+    }
+  }
+  
+  @keyframes slideInGlow {
+    0% {
+      opacity: 0;
+      transform: translateY(50px) scale(0.8);
+      filter: blur(10px) brightness(0.5);
     }
     50% {
-      transform: translateY(-5px) scale(1.02);
+      opacity: 0.8;
+      transform: translateY(-8px) scale(1.03);
+      filter: blur(2px) brightness(1.2);
+    }
+    80% {
+      transform: translateY(2px) scale(0.99);
+      filter: blur(0px) brightness(1.1);
     }
     100% {
       opacity: 1;
       transform: translateY(0) scale(1);
+      filter: blur(0px) brightness(1);
     }
   }
   
-  @keyframes float {
+  @keyframes subtlePulse {
     0%, 100% {
-      transform: translateY(0px);
+      transform: scale(1);
+      opacity: 1;
     }
     50% {
-      transform: translateY(-8px);
+      transform: scale(1.02);
+      opacity: 0.95;
     }
   }
   

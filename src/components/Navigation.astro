@@ -175,7 +175,52 @@ const currentPath = pathname === '/' ? '/' : pathname; // Keep full path
       // Update last scroll position
       lastScrollY = currentScrollY;
     });
-  });
+    
+    // Function to update active navigation state
+    const updateActiveNavigation = () => {
+      const currentPath = window.location.pathname;
+      const navLinks = document.querySelectorAll('nav a[href]');
+      
+      navLinks.forEach(link => {
+        const href = link.getAttribute('href');
+        const isActive = currentPath === href || (currentPath.startsWith(href) && href !== '/');
+        
+        // Remove all active classes
+        link.classList.remove('font-bold', 'text-white', 'bg-zinc-900', 'dark:text-zinc-900', 'dark:bg-white', 'px-3', 'py-1', 'px-4', 'py-2', 'rounded-md', 'shadow-sm');
+        link.classList.remove('font-medium', 'text-zinc-600', 'hover:text-zinc-900', 'dark:text-zinc-400', 'dark:hover:text-white');
+        
+        if (isActive) {
+          // Add active classes
+          link.classList.add('font-bold', 'text-white', 'bg-zinc-900', 'dark:text-zinc-900', 'dark:bg-white', 'shadow-sm');
+          // Add appropriate padding based on context (desktop vs mobile)
+          if (link.closest('.mobile-nav-item')) {
+            link.classList.add('px-4', 'py-2');
+          } else {
+            link.classList.add('px-3', 'py-1');
+          }
+          link.classList.add('rounded-md');
+        } else {
+          // Add inactive classes
+          link.classList.add('font-medium', 'text-zinc-600', 'hover:text-zinc-900', 'dark:text-zinc-400', 'dark:hover:text-white');
+        }
+      });
+    };
+    
+    // Update navigation on page load
+    updateActiveNavigation();
+    
+    // Listen for navigation changes (for SPA-like behavior)
+    window.addEventListener('popstate', updateActiveNavigation);
+    
+    // Override link clicks to update navigation immediately
+    document.addEventListener('click', (e) => {
+      const link = e.target.closest('a[href]');
+      if (link && link.getAttribute('href').startsWith('/')) {
+        // Small delay to allow navigation to complete
+        setTimeout(updateActiveNavigation, 10);
+      }
+    });
+   });
 </script>
 
 <style>

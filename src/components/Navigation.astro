@@ -1,10 +1,11 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import { Image } from 'astro:assets';
 
 const navItems = [
   { text: 'Inicio', href: '/' },
   { text: 'Blog', href: '/blog' },
-  { text: 'Tags', href: '/tags' },
+  { text: 'Temas', href: '/tags' },
   { text: 'Nosotros', href: '/about' },
 ];
 
@@ -17,8 +18,8 @@ const currentPath = pathname === '/' ? '/' : pathname; // Keep full path
   <div class="max-w-3xl mx-auto px-4 flex items-center justify-between">
     <!-- Logo with dynamic light/dark mode images -->
     <a href="/" class="flex items-center">
-      <img src="/NEGRO (2).png" alt="Heliboss Logo" class="h-8 w-auto block dark:hidden" />
-      <img src="/BLANCO (2).png" alt="Heliboss Logo" class="h-8 w-auto hidden dark:block" />
+      <Image src="/NEGRO (2).png" alt="Heliboss Logo" class="h-8 w-auto block dark:hidden" width={120} height={32} loading="eager" decoding="async" />
+        <Image src="/BLANCO (2).png" alt="Heliboss Logo" class="h-8 w-auto hidden dark:block" width={120} height={32} loading="eager" decoding="async" />
     </a>
     
     <!-- Desktop Navigation -->
@@ -52,8 +53,8 @@ const currentPath = pathname === '/' ? '/' : pathname; // Keep full path
 <div id="mobile-menu" class="fixed inset-0 z-50 bg-white dark:bg-zinc-900 flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-in-out">
   <div class="flex justify-between items-center p-4 border-b border-zinc-100 dark:border-zinc-800">
     <a href="/" class="flex items-center">
-      <img src="/NEGRO (2).png" alt="Heliboss Logo" class="h-8 w-auto block dark:hidden" />
-      <img src="/BLANCO (2).png" alt="Heliboss Logo" class="h-8 w-auto hidden dark:block" />
+      <Image src="/NEGRO (2).png" alt="Heliboss Logo" class="h-8 w-auto block dark:hidden" width={120} height={32} loading="eager" decoding="async" />
+        <Image src="/BLANCO (2).png" alt="Heliboss Logo" class="h-8 w-auto hidden dark:block" width={120} height={32} loading="eager" decoding="async" />
     </a>
     <button id="close-menu-button" class="text-zinc-900 dark:text-white p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" aria-label="Cerrar menú">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">

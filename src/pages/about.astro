@@ -2,6 +2,7 @@
 import BaseLayout from '../layouts/BaseLayout.astro';
 import { FaJs, FaReact, FaNodeJs, FaPython } from 'react-icons/fa';
 import { SiTypescript, SiAstro } from 'react-icons/si';
+import { Image } from 'astro:assets';
 
 // Thông tin kỹ năng với logo ngôn ngữ lập trình
 const skills = [
@@ -62,17 +63,23 @@ const skills = [
         
         <div class="order-1 md:order-2 relative">
           <div class="aspect-square w-full max-w-[280px] sm:max-w-[320px] md:max-w-md mx-auto overflow-hidden rounded-3xl border-4 sm:border-8 border-white dark:border-zinc-800 shadow-xl sm:shadow-2xl theme-transition-all">
-            <img 
+            <Image 
               src="/NEGRO (2).png" 
               alt="Heliboss Logo" 
               class="w-full h-full object-contain p-4 block dark:hidden"
               loading="eager"
+              width={320}
+              height={320}
+              decoding="async"
             />
-            <img 
+            <Image 
               src="/BLANCO (2).png" 
               alt="Heliboss Logo" 
               class="w-full h-full object-contain p-4 hidden dark:block"
               loading="eager"
+              width={320}
+              height={320}
+              decoding="async"
             />
           </div>
           

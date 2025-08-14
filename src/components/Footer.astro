@@ -1,4 +1,7 @@
 ---
+import { SITE_TITLE } from '../consts';
+import { Image } from 'astro:assets';
+
 const currentYear = new Date().getFullYear();
 
 // Define navigation links
@@ -46,15 +49,15 @@ const socialLinks = [
           <a href="/" class="inline-block group">
             <div class="flex items-center">
               <div class="relative flex items-center justify-center overflow-hidden transform transition-transform group-hover:scale-105">
-                <img src="/NEGRO (2).png" alt="Heliboss Logo" class="h-10 w-auto block dark:hidden group-hover:scale-110 transition-transform duration-300" />
-                <img src="/BLANCO (2).png" alt="Heliboss Logo" class="h-10 w-auto hidden dark:block group-hover:scale-110 transition-transform duration-300" />
+                <Image src="/NEGRO (2).png" alt="Heliboss Logo" class="h-10 w-auto block dark:hidden group-hover:scale-110 transition-transform duration-300" width={150} height={40} loading="lazy" decoding="async" />
+        <Image src="/BLANCO (2).png" alt="Heliboss Logo" class="h-10 w-auto hidden dark:block group-hover:scale-110 transition-transform duration-300" width={150} height={40} loading="lazy" decoding="async" />
               </div>
               <span class="ml-3 text-xl font-bold text-zinc-900 dark:text-zinc-100 theme-transition-color">Blog</span>
             </div>
           </a>
           
           <p class="mt-4 text-sm text-zinc-600 dark:text-zinc-400 theme-transition-color leading-relaxed">
-            <span class="text-green-600 dark:text-green-400 font-semibold">DEALER OFICIAL DE DRONES DJI ENTERPRISE EN CHILE*</span>
+            <span class="text-green-600 dark:text-green-400 font-semibold text-lg">DEALER OFICIAL DE DRONES DJI ENTERPRISE EN CHILE</span>
           </p>
           
           <!-- Enhanced social links with improved hover effects -->

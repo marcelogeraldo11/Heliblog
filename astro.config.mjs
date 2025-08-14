@@ -27,14 +27,28 @@ const getSiteURL = () => {
 // https://astro.build/config
 export default defineConfig({
   site: getSiteURL(),
+  devToolbar: {
+    enabled: false
+  },
   integrations: [
     tailwind(),
     react(),
   ],
   vite: {
-    assetsInclude: ['**/*.webp', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg']
+    assetsInclude: ['**/*.webp', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg'],
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            vendor: ['react', 'react-dom'],
+          },
+        },
+      },
+    },
   },
   build: {
-    assets: 'assets'
-  }
+    assets: 'assets',
+    inlineStylesheets: 'auto',
+  },
+  compressHTML: true,
 });

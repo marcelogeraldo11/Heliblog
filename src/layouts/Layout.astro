@@ -13,17 +13,76 @@ const { title, description = "Blog de Heliboss" } = Astro.props;
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow" />
+    <meta name="author" content="Heliboss" />
+    <meta name="theme-color" content="#ffffff" />
+    <meta name="keywords" content="drones, DJI, Chile, tecnología, dealer oficial, enterprise, industrial" />
+    <meta name="language" content="es-CL" />
+    <meta name="geo.region" content="CL" />
+    <meta name="geo.country" content="Chile" />
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content={Astro.url} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:site_name" content="Heliboss Blog" />
+    <meta property="og:locale" content="es_CL" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:title" content={title} />
+    <meta property="twitter:description" content={description} />
+    
+    <!-- Canonical URL -->
+    <link rel="canonical" href={Astro.url} />
+    
+    <!-- RSS Feed -->
+    <link rel="alternate" type="application/rss+xml" title="Heliboss Blog RSS" href="/rss.xml" />
+    
     <title>{title}</title>
+    <!-- Preload critical resources -->
+    <link rel="preload" href="/favicon.svg" as="image" type="image/svg+xml">
+    
+    <!-- Font optimization -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- DNS prefetch for external resources -->
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    
+    <!-- Datos estructurados para la organización -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "Heliboss",
+      "url": "https://heliboss.cl",
+      "logo": "https://heliboss.cl/NEGRO (2).png",
+      "description": "Dealer oficial de drones DJI Enterprise en Chile",
+      "address": {
+        "@type": "PostalAddress",
+        "addressCountry": "CL",
+        "addressRegion": "Chile"
+      },
+      "areaServed": "Chile",
+      "brand": "DJI",
+      "serviceType": "Venta y soporte de drones DJI Enterprise",
+      "sameAs": [
+        "https://www.heliboss.cl"
+      ]
+    }
+    </script>
   </head>
   <body class="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 min-h-screen flex flex-col">
     <!-- Page transition overlay - for smooth transitions between pages -->
@@ -43,6 +102,19 @@ const { title, description = "Blog de Heliboss" } = Astro.props;
     <Footer />
     
     <script>
+      // Register Service Worker for performance optimization
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+
       // Enhanced SPA transition system with history API
       document.addEventListener('DOMContentLoaded', () => {
         const pageTransition = document.getElementById('page-transition');

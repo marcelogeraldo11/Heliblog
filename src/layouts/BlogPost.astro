@@ -3,6 +3,7 @@ import Layout from './Layout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import ShareButtons from '../components/ShareButtons.astro';
 import TagList from '../components/TagList.astro';
+import { Image } from 'astro:assets';
 import './styles/markdown.css';
 export interface Props {
   title: string;
@@ -56,9 +57,87 @@ if (heroImage) {
     heroImageUrl = heroImage;
   }
 }
+// Datos estructurados JSON-LD para SEO
+const jsonLD = {
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": title,
+  "description": description,
+  "author": {
+    "@type": "Organization",
+    "name": "Heliboss",
+    "url": "https://heliboss.cl"
+  },
+  "publisher": {
+    "@type": "Organization",
+    "name": "Heliboss",
+    "logo": {
+      "@type": "ImageObject",
+      "url": `${Astro.site || 'https://heliboss.cl'}/NEGRO (2).png`
+    }
+  },
+  "datePublished": pubDate.toISOString(),
+  "dateModified": (updatedDate || pubDate).toISOString(),
+  "mainEntityOfPage": {
+    "@type": "WebPage",
+    "@id": canonicalURL.toString()
+  },
+  "url": canonicalURL.toString(),
+  "image": heroImageUrl || `${Astro.site || 'https://heliboss.cl'}/placeholder.jpg`,
+  "keywords": tags?.join(', ') || 'drones, DJI, tecnología'
+};
 ---
 
 <Layout title={title} description={description}>
+  <!-- Datos estructurados JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify(jsonLD)} />
+  
+  <!-- Meta tags adicionales para redes sociales -->
+  <meta property="og:type" content="article" slot="head" />
+  <meta property="og:image" content={heroImageUrl || `${Astro.site || 'https://heliboss.cl'}/placeholder.jpg`} slot="head" />
+  <meta property="og:image:width" content="1200" slot="head" />
+  <meta property="og:image:height" content="630" slot="head" />
+  <meta property="og:image:alt" content={title} slot="head" />
+  <meta property="article:published_time" content={pubDate.toISOString()} slot="head" />
+  {updatedDate && <meta property="article:modified_time" content={updatedDate.toISOString()} slot="head" />}
+  {tags && tags.map(tag => <meta property="article:tag" content={tag} slot="head" />)}
+  
+  <!-- Twitter Card específico para artículos -->
+  <meta name="twitter:card" content="summary_large_image" slot="head" />
+  <meta name="twitter:image" content={heroImageUrl || `${Astro.site || 'https://heliboss.cl'}/placeholder.jpg`} slot="head" />
+  <meta name="twitter:image:alt" content={title} slot="head" />
+  <!-- Breadcrumbs estructurados -->
+  <nav aria-label="Breadcrumb" class="mb-8">
+    <ol itemscope itemtype="https://schema.org/BreadcrumbList" class="flex items-center space-x-2 text-sm text-zinc-600 dark:text-zinc-400">
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+          <span itemprop="name">Inicio</span>
+        </a>
+        <meta itemprop="position" content="1" />
+      </li>
+      <li class="flex items-center">
+        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+        </svg>
+      </li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <a itemprop="item" href="/blog" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
+          <span itemprop="name">Blog</span>
+        </a>
+        <meta itemprop="position" content="2" />
+      </li>
+      <li class="flex items-center">
+        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
+          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+        </svg>
+      </li>
+      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
+        <span itemprop="name" class="text-zinc-900 dark:text-zinc-100 font-medium">{title}</span>
+        <meta itemprop="position" content="3" />
+      </li>
+    </ol>
+  </nav>
+
   <article class="prose dark:prose-invert prose-zinc lg:prose-lg mx-auto max-w-4xl">
     <div class="mb-12">
       <h1 class="mb-4 text-4xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 sm:text-5xl">
@@ -77,11 +156,14 @@ if (heroImage) {
     {heroImage && (
       <div class="relative mb-8 sm:mb-12 overflow-hidden rounded-xl shadow-lg">
         <div class="aspect-[16/9] w-full">
-          <img 
+          <Image 
             src={heroImageUrl} 
             alt={title}
             class="w-full h-full object-cover"
             loading="eager"
+            width={800}
+            height={450}
+            decoding="async"
           />
         </div>
         <div class="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent"></div>

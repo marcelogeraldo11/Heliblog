@@ -1,7 +1,7 @@
 ---
 title: "Lanzamiento de la Osmo 360: ¿Por qué comprar esta innovadora cámara?"
 description: "Descubre por qué la Osmo 360 está revolucionando el mundo del entretenimiento con sus funciones avanzadas y su diseño innovador."
-pubDate: 2025-08-04
+pubDate: 2025-07-31
 heroImage: "/osmo.png"
 tags: ["dji", "osmo", "camara", "tecnologia", "lanzamiento", "360"]
 ---

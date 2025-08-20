@@ -1,7 +1,7 @@
 ---
 title: "DJI Mavic 3 Multispectral: Revolución en Agricultura de Precisión"
 description: "Descubre cómo el DJI Mavic 3 Multispectral está transformando la agricultura moderna con tecnología de imagen multiespectral avanzada, análisis NDVI y capacidades de mapeo profesional."
-pubDate: 2025-01-15
+pubDate: 2022-11-23
 heroImage: "/m3m.jpg"
 tags: ["DJI", "Mavic 3", "Multispectral", "Agricultura", "Precisión", "NDVI", "Mapeo", "Tecnología"]
 author: "Heliboss"

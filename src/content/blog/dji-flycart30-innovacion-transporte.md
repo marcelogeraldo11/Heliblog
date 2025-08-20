@@ -1,7 +1,7 @@
 ---
 title: 'Innovación en transporte con drones: El potencial de DJI FlyCart30 en ciudades chilenas'
 description: 'Descubre cómo el DJI FlyCart30 puede revolucionar la logística urbana en ciudades chilenas con entregas rápidas, sostenibles y eficientes.'
-pubDate: 2025-01-15
+pubDate: 2024-01-10
 heroImage: '/fly.png'
 tags: ['dji', 'flycart30', 'drones', 'logistica', 'transporte', 'chile', 'innovacion', 'tecnologia']
 ---

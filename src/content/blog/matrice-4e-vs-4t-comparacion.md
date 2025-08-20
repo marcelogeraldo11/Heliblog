@@ -1,7 +1,7 @@
 ---
 title: "DJI Matrice 4E vs 4T: Comparación Completa de los Nuevos Drones Empresariales"
 description: "Análisis detallado de las diferencias entre el DJI Matrice 4E y 4T, dos drones multisensor inteligentes diseñados para aplicaciones profesionales específicas."
-pubDate: 2024-12-20
+pubDate: 2025-01-08
 heroImage: "/m4t.jpg"
 tags: ["DJI", "Matrice", "Drones Empresariales", "Comparación", "Tecnología"]
 ---

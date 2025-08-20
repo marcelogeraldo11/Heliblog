@@ -1,7 +1,7 @@
 ---
 title: "DJI Matrice 400: El Nuevo Estándar en Drones Industriales"
 description: "Descubre el DJI Matrice 400, la plataforma de drones empresariales más avanzada de DJI con 59 minutos de vuelo, carga útil de 6 kg y tecnología LiDAR integrada."
-pubDate: 2025-01-20
+pubDate: 2025-01-08
 heroImage: "/m400.webp"
 tags: ["dji", "matrice-400", "industrial", "enterprise", "lidar"]
 readingTime: "8 min de lectura"

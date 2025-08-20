@@ -1,7 +1,7 @@
 ---
 title: "DJI Dock 2: Todo lo que necesitas saber"
 description: "Guía completa sobre el DJI Dock 2, la solución de automatización más avanzada para operaciones de drones industriales y comerciales."
-pubDate: 2025-08-04
+pubDate: 2024-03-26
 heroImage: "/dock2.png"
 tags: ["dji", "dock", "automatizacion", "industrial", "drones"]
 ---

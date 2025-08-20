@@ -1,7 +1,7 @@
 ---
 title: "DJI D-RTK 3: La Estación Multifuncional que Revoluciona el Posicionamiento de Precisión"
 description: "Descubre el DJI D-RTK 3, la estación GNSS multifuncional más avanzada de DJI con precisión centimétrica, múltiples modos operativos y compatibilidad con 5 sistemas satelitales globales."
-pubDate: 2025-01-20
+pubDate: 2025-01-08
 heroImage: "/rtk3.webp"
 tags: ["dji", "d-rtk-3", "gnss", "rtk", "posicionamiento", "precision"]
 readingTime: "10 min de lectura"

@@ -1,7 +1,7 @@
 ---
 title: "DJI Matrice 350 RTK vs Matrice 400 RTK: Comparación Completa 2024"
 description: "Análisis detallado entre el DJI Matrice 350 RTK y el nuevo Matrice 400 RTK. Descubre cuál es el mejor dron enterprise para tu proyecto profesional."
-pubDate: 2025-01-21
+pubDate: 2023-05-18
 heroImage: "/versus.png"
 readingTime: "12 min de lectura"
 tags: ["DJI", "Matrice", "Enterprise", "Comparación", "RTK", "Drones Profesionales"]

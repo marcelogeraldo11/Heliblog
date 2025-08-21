@@ -3,6 +3,7 @@ import Layout from './Layout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import ShareButtons from '../components/ShareButtons.astro';
 import TagList from '../components/TagList.astro';
+import ResponsiveImage from '../components/ResponsiveImage.astro';
 import { Image } from 'astro:assets';
 import './styles/markdown.css';
 export interface Props {
@@ -152,11 +153,11 @@ const jsonLD = {
       <TagList tags={tags} class="mt-2" />
     </div>
     
-    <!-- Hero image with improved styling -->
+    <!-- Hero image with improved styling and fallback -->
     {heroImage && (
       <div class="relative mb-8 sm:mb-12 overflow-hidden rounded-xl shadow-lg">
         <div class="aspect-[16/9] w-full">
-          <Image 
+          <ResponsiveImage 
             src={heroImageUrl} 
             alt={title}
             class="w-full h-full object-cover"

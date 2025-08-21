@@ -1,0 +1,65 @@
+---
+import { Image } from 'astro:assets';
+
+export interface Props {
+  src: string;
+  alt: string;
+  width?: number;
+  height?: number;
+  class?: string;
+  loading?: 'eager' | 'lazy';
+  decoding?: 'async' | 'sync' | 'auto';
+}
+
+const { 
+  src, 
+  alt, 
+  width = 800, 
+  height = 450, 
+  class: className = "w-full h-full object-cover", 
+  loading = "lazy",
+  decoding = "async"
+} = Astro.props;
+
+// Determinar si la imagen es WebP
+const isWebP = src.toLowerCase().endsWith('.webp');
+
+// Crear URL de respaldo para WebP
+let fallbackSrc = '';
+if (isWebP) {
+  // Si es WebP, crear respaldo JPG o PNG
+  fallbackSrc = src.replace(/\.webp$/i, '.jpg');
+  // Si no existe el JPG, intentar con PNG
+  if (!fallbackSrc.endsWith('.jpg')) {
+    fallbackSrc = src.replace(/\.webp$/i, '.png');
+  }
+} else {
+  // Si no es WebP, no necesitamos respaldo
+  fallbackSrc = src;
+}
+---
+
+{isWebP ? (
+  <picture>
+    <source srcset={src} type="image/webp" />
+    <img 
+      src={fallbackSrc} 
+      alt={alt} 
+      width={width} 
+      height={height} 
+      class={className}
+      loading={loading}
+      decoding={decoding}
+    />
+  </picture>
+) : (
+  <Image 
+    src={src} 
+    alt={alt} 
+    width={width} 
+    height={height} 
+    class={className}
+    loading={loading}
+    decoding={decoding}
+  />
+)}

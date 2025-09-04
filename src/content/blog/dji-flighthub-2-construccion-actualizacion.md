@@ -1,7 +1,7 @@
 ---
 title: 'DJI FlightHub 2 Ahora Mejorado para AEC'
 description: 'DJI FlightHub 2 Analyzer ya está oficialmente disponible, introduciendo funciones como importación de archivos de diseño, línea de tiempo, cálculo de mediciones y flujo de trabajo automatizado, brindando una nueva solución poderosa para profesionales de Arquitectura, Ingeniería y Construcción (AEC).'
-pubDate: 'Jan 28 2025'
+pubDate: 2025-01-28
 heroImage: '/c7b6ac28-2964-4e29-97f4-ab3c9a67ff46.webp'
 tags: ['DJI', 'FlightHub 2', 'Construcción', 'AEC', 'Drones', 'Tecnología']
 ---

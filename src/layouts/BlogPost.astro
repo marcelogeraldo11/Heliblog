@@ -160,7 +160,7 @@ const jsonLD = {
           <ResponsiveImage 
             src={heroImageUrl} 
             alt={title}
-            class="w-full h-full object-cover"
+            class="w-full h-full object-cover hero-image-position"
             loading="eager"
             width={800}
             height={450}
@@ -473,6 +473,11 @@ const jsonLD = {
   
   article img:first-of-type:hover {
     transform: scale(1.01);
+  }
+  
+  /* Hero image position adjustment */
+  .hero-image-position {
+    object-position: center 30% !important;
   }
   
   /* Article entrance animation */

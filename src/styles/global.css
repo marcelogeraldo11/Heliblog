@@ -1,4 +1,184 @@
-/* Remove all the complex mobile menu styles and keep only what's necessary */
+/* Performance optimizations */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* Critical CSS for above-the-fold content */
+.hero-section {
+  contain: layout style paint;
+}
+
+/* Optimize font loading */
+@font-face {
+  font-family: 'Inter';
+  font-display: swap;
+  src: url('/fonts/inter.woff2') format('woff2');
+}
+
+/* Improve rendering performance */
+* {
+  box-sizing: border-box;
+}
+
+img, video {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Optimize animations */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Cross-browser compatibility improvements */
+/* Normalize CSS for consistent rendering across browsers */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Ensure consistent font rendering */
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+/* Fix flexbox issues in older browsers */
+.flex {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.flex-col {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column;
+}
+
+/* Grid fallbacks for older browsers */
+@supports not (display: grid) {
+  .grid {
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+  }
+  
+  .grid > * {
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 300px;
+    flex: 1 1 300px;
+  }
+}
+
+/* Ensure images work properly in all browsers */
+img {
+  max-width: 100%;
+  height: auto;
+  border: 0;
+  -ms-interpolation-mode: bicubic;
+}
+
+/* Fix button styling across browsers */
+button {
+  background: none;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline: inherit;
+}
+
+/* Smooth scrolling with fallback */
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* CSS custom properties fallbacks */
+:root {
+  --color-primary: #000000;
+  --color-secondary: #ffffff;
+  --color-accent: #22c55e;
+}
+
+/* Dark mode with fallback */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-primary: #ffffff;
+    --color-secondary: #000000;
+  }
+}
+
+/* Ensure transforms work in older browsers */
+.transform {
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+}
+
+/* Fix transition issues */
+.transition {
+  -webkit-transition: all 0.3s ease;
+  -o-transition: all 0.3s ease;
+  transition: all 0.3s ease;
+}
+
+/* Responsive design improvements */
+@media screen and (max-width: 640px) {
+  /* Mobile-first responsive adjustments */
+  .container {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  /* Ensure touch targets are large enough */
+  button, a {
+    min-height: 44px;
+    min-width: 44px;
+  }
+}
+
+/* High contrast mode support */
+@media (prefers-contrast: high) {
+  * {
+    border-color: currentColor !important;
+  }
+}
+
+/* Print styles */
+@media print {
+  * {
+    background: transparent !important;
+    color: black !important;
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+  
+  a, a:visited {
+    text-decoration: underline;
+  }
+  
+  img {
+    max-width: 100% !important;
+  }
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -24,10 +204,12 @@
   }
 
   /* Simple theme transition */
-  body, a, button {
-    transition: background-color var(--theme-transition), 
-                color var(--theme-transition), 
-                border-color var(--theme-transition);
+  body,
+  a,
+  button {
+    transition: background-color var(--theme-transition),
+      color var(--theme-transition),
+      border-color var(--theme-transition);
   }
 }
 
@@ -36,9 +218,10 @@
   html {
     scroll-padding-top: 4rem;
   }
-  
+
   /* Better touch targets on mobile */
-  button, a {
+  button,
+  a {
     @apply min-h-[44px];
   }
 }
@@ -46,23 +229,49 @@
 
 /* Add smooth animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideUp {
-  from { transform: translateY(20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slideDown {
-  from { transform: translateY(-20px); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes scaleIn {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Apply animations to elements */
@@ -100,11 +309,13 @@
 }
 
 /* Smooth hover transitions */
-a, button {
+a,
+button {
   transition: all 0.2s ease;
 }
 
-a:hover, button:hover {
+a:hover,
+button:hover {
   transform: translateY(-1px);
 }
 
@@ -130,7 +341,7 @@ strong,
 b {
   /* Fallback background color for oldest browsers */
   background-color: #dcfce7;
-  
+
   /* Modern gradient with all vendor prefixes */
   background: -webkit-gradient(linear, left top, right bottom, from(#dcfce7), to(#bbf7d0));
   background: -webkit-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
@@ -138,28 +349,29 @@ b {
   background: -o-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
   background: -ms-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
   background: linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
-  
+
   /* Spacing and typography */
   padding: 0.125rem 0.25rem;
   margin: 0 0.0625rem;
   border-radius: 0.25rem;
   font-weight: 600;
-  font-weight: bold; /* Fallback for older browsers */
+  font-weight: bold;
+  /* Fallback for older browsers */
   color: #166534;
-  
+
   /* Text decoration and display properties */
   text-decoration: none;
   display: inline;
   line-height: 1.4;
-  
+
   /* Box decoration for text wrapping */
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
   -moz-box-decoration-break: clone;
-  
+
   /* Additional border for browsers that don't support gradients */
   border: 1px solid transparent;
-  
+
   /* Smooth transitions */
   transition: all 0.2s ease;
   -webkit-transition: all 0.2s ease;
@@ -174,7 +386,7 @@ b {
 :global(.dark) b {
   /* Fallback background color for oldest browsers */
   background-color: #14532d;
-  
+
   /* Modern gradient with all vendor prefixes */
   background: -webkit-gradient(linear, left top, right bottom, from(#14532d), to(#166534));
   background: -webkit-linear-gradient(120deg, #14532d 0%, #166534 100%);
@@ -182,10 +394,10 @@ b {
   background: -o-linear-gradient(120deg, #14532d 0%, #166534 100%);
   background: -ms-linear-gradient(120deg, #14532d 0%, #166534 100%);
   background: linear-gradient(120deg, #14532d 0%, #166534 100%);
-  
+
   /* Dark mode text color */
   color: #bbf7d0;
-  
+
   /* Additional border for browsers that don't support gradients */
   border: 1px solid #166534;
 }
@@ -213,6 +425,7 @@ b {
 
 /* Modern browsers fallback using @supports */
 @supports not (background: linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%)) {
+
   .prose strong,
   .prose b,
   strong,
@@ -221,7 +434,7 @@ b {
     border: 2px solid #bbf7d0;
     font-weight: bold;
   }
-  
+
   :global(.dark) .prose strong,
   :global(.dark) .prose b,
   :global(.dark) strong,
@@ -234,6 +447,7 @@ b {
 
 /* Internet Explorer specific styles */
 @media screen\9 {
+
   .prose strong,
   .prose b,
   strong,
@@ -241,7 +455,8 @@ b {
     background-color: #dcfce7;
     border: 2px solid #bbf7d0;
     font-weight: bold;
-    zoom: 1; /* IE hasLayout trigger */
+    zoom: 1;
+    /* IE hasLayout trigger */
   }
 }
 

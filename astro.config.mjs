@@ -1,6 +1,6 @@
 import { defineConfig } from 'astro/config';
 import tailwind from '@astrojs/tailwind';
-import react from '@astrojs/react'; // Add this line
+import react from '@astrojs/react';
 
 // Determine site URL based on environment
 const getSiteURL = () => {
@@ -34,6 +34,22 @@ export default defineConfig({
     tailwind(),
     react(),
   ],
+  image: {
+    service: {
+      entrypoint: 'astro/assets/services/sharp'
+    },
+    domains: ['localhost', 'heliboss.com'],
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '*.heliboss.com',
+      },
+      {
+        protocol: 'https',
+        hostname: 'images.unsplash.com',
+      },
+    ],
+  },
   vite: {
     assetsInclude: ['**/*.webp', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg'],
     build: {
@@ -41,14 +57,25 @@ export default defineConfig({
         output: {
           manualChunks: {
             vendor: ['react', 'react-dom'],
+            astro: ['astro/runtime/client/idle.js', 'astro/runtime/client/load.js'],
           },
         },
       },
+      cssCodeSplit: true,
+      minify: 'esbuild',
+    },
+    optimizeDeps: {
+      include: ['react', 'react-dom'],
     },
   },
   build: {
     assets: 'assets',
     inlineStylesheets: 'auto',
+    split: true,
   },
   compressHTML: true,
+  prefetch: {
+    prefetchAll: true,
+    defaultStrategy: 'viewport',
+  },
 });

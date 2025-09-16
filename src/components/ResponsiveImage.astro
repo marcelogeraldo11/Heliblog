@@ -1,4 +1,6 @@
 ---
+import { Image } from 'astro:assets';
+
 export interface Props {
   src: string;
   alt: string;
@@ -7,6 +9,8 @@ export interface Props {
   class?: string;
   loading?: 'eager' | 'lazy';
   decoding?: 'async' | 'sync' | 'auto';
+  quality?: number;
+  format?: 'webp' | 'avif' | 'png' | 'jpg' | 'jpeg';
 }
 
 const { 
@@ -16,20 +20,40 @@ const {
   height = 450, 
   class: className = "w-full h-full object-cover", 
   loading = "lazy",
-  decoding = "async"
+  decoding = "async",
+  quality = 80,
+  format = "webp"
 } = Astro.props;
 
-// Debug: log para verificar las rutas
-console.log('ResponsiveImage Debug:', { src, alt });
+// Check if it's an external URL or local image
+const isExternalUrl = src.startsWith('http') || src.startsWith('//');
 ---
 
-<img 
-  src={src} 
-  alt={alt} 
-  width={width} 
-  height={height} 
-  class={className}
-  loading={loading}
-  decoding={decoding}
-  onerror="console.error('Error loading image:', this.src); console.log('Image path:', this.src);"
-/>
+{isExternalUrl ? (
+  <!-- External images use regular img tag with optimizations -->
+  <img 
+    src={src} 
+    alt={alt} 
+    width={width} 
+    height={height} 
+    class={className}
+    loading={loading}
+    decoding={decoding}
+    fetchpriority={loading === 'eager' ? 'high' : 'auto'}
+    onerror="console.error('Error loading image:', this.src);"
+  />
+) : (
+  <!-- Local images use Astro's optimized Image component -->
+  <Image 
+    src={src} 
+    alt={alt} 
+    width={width} 
+    height={height} 
+    class={className}
+    loading={loading}
+    decoding={decoding}
+    quality={quality}
+    format={format}
+    fetchpriority={loading === 'eager' ? 'high' : 'auto'}
+  />
+)}

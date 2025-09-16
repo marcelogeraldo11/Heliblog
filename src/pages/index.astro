@@ -86,8 +86,10 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
                   alt={post.data.title}
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                   loading={index === 0 ? "eager" : "lazy"}
+                  decoding="async"
                   width="400"
                   height="225"
+                  fetchpriority={index === 0 ? "high" : "auto"}
                 />
               </div>
             )}

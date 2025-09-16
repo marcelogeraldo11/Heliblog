@@ -1,7 +1,9 @@
 ---
+import { ViewTransitions } from 'astro:transitions';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
 import Background from '../components/Background.astro';
+import BrowserCompatibility from '../components/BrowserCompatibility.astro';
 import '../styles/global.css';
 
 export interface Props {
@@ -9,24 +11,37 @@ export interface Props {
   description?: string;
 }
 
-const { title, description = "Blog de Heliboss" } = Astro.props;
+const { title, description = "Blog profesional sobre tecnología de drones, sistemas aéreos y las últimas innovaciones en el sector. Análisis técnico y tendencias del mercado." } = Astro.props;
 ---
 
 <!DOCTYPE html>
 <html lang="es">
   <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
-    <meta name="author" content="Heliboss" />
-    <meta name="theme-color" content="#ffffff" />
-    <meta name="keywords" content="drones, DJI, Chile, tecnología, dealer oficial, enterprise, industrial" />
-    <meta name="language" content="es-CL" />
+    <meta name="author" content="Heliboss Blog" />
+    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0f0f23" media="(prefers-color-scheme: dark)" />
+    <meta name="keywords" content="drones, DJI, tecnología, blog profesional, sistemas aéreos" />
+    <meta name="language" content="es" />
     <meta name="geo.region" content="CL" />
     <meta name="geo.country" content="Chile" />
+    
+    <!-- Performance optimizations -->
+    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
+    <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
+    
+    <!-- Critical CSS inlined -->
+    <style>
+      /* Critical above-the-fold styles */
+      body { font-family: system-ui, -apple-system, sans-serif; }
+      .hero-section { min-height: 50vh; }
+    </style>
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
@@ -85,6 +100,12 @@ const { title, description = "Blog de Heliboss" } = Astro.props;
     </script>
   </head>
   <body class="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 min-h-screen flex flex-col">
+    <!-- ViewTransitions for smooth page navigation -->
+    <ViewTransitions />
+    
+    <!-- Browser compatibility component -->
+    <BrowserCompatibility />
+    
     <!-- Page transition overlay - for smooth transitions between pages -->
     <div id="page-transition" class="fixed inset-0 z-40 bg-white dark:bg-zinc-900 opacity-0 pointer-events-none transition-opacity duration-300 flex items-center justify-center">
       <div class="transition-spinner"></div>

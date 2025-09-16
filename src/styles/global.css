@@ -123,52 +123,141 @@ a:hover, button:hover {
   transform: translateY(0);
 }
 
-/* Green highlight for bold text in markdown content - Cross-browser compatible */
+/* Green highlight for bold text in markdown content - Maximum cross-browser compatibility */
 .prose strong,
 .prose b,
 strong,
 b {
-  background: linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
+  /* Fallback background color for oldest browsers */
+  background-color: #dcfce7;
+  
+  /* Modern gradient with all vendor prefixes */
+  background: -webkit-gradient(linear, left top, right bottom, from(#dcfce7), to(#bbf7d0));
   background: -webkit-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
   background: -moz-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
   background: -o-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
   background: -ms-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
+  background: linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
+  
+  /* Spacing and typography */
   padding: 0.125rem 0.25rem;
+  margin: 0 0.0625rem;
   border-radius: 0.25rem;
   font-weight: 600;
+  font-weight: bold; /* Fallback for older browsers */
   color: #166534;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
+  
+  /* Text decoration and display properties */
+  text-decoration: none;
   display: inline;
   line-height: 1.4;
+  
+  /* Box decoration for text wrapping */
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  -moz-box-decoration-break: clone;
+  
+  /* Additional border for browsers that don't support gradients */
+  border: 1px solid transparent;
+  
+  /* Smooth transitions */
+  transition: all 0.2s ease;
+  -webkit-transition: all 0.2s ease;
+  -moz-transition: all 0.2s ease;
+  -o-transition: all 0.2s ease;
 }
 
-/* Dark mode support for green highlight */
+/* Dark mode support for green highlight - Maximum cross-browser compatibility */
 :global(.dark) .prose strong,
 :global(.dark) .prose b,
 :global(.dark) strong,
 :global(.dark) b {
-  background: linear-gradient(120deg, #14532d 0%, #166534 100%);
+  /* Fallback background color for oldest browsers */
+  background-color: #14532d;
+  
+  /* Modern gradient with all vendor prefixes */
+  background: -webkit-gradient(linear, left top, right bottom, from(#14532d), to(#166534));
   background: -webkit-linear-gradient(120deg, #14532d 0%, #166534 100%);
   background: -moz-linear-gradient(120deg, #14532d 0%, #166534 100%);
   background: -o-linear-gradient(120deg, #14532d 0%, #166534 100%);
   background: -ms-linear-gradient(120deg, #14532d 0%, #166534 100%);
+  background: linear-gradient(120deg, #14532d 0%, #166534 100%);
+  
+  /* Dark mode text color */
   color: #bbf7d0;
+  
+  /* Additional border for browsers that don't support gradients */
+  border: 1px solid #166534;
 }
 
-/* Fallback for very old browsers that don't support gradients */
+/* Enhanced fallbacks for maximum browser compatibility */
+
+/* For browsers that don't support @supports (IE) */
+.no-cssgradients .prose strong,
+.no-cssgradients .prose b,
+.no-cssgradients strong,
+.no-cssgradients b {
+  background-color: #dcfce7 !important;
+  border: 2px solid #bbf7d0 !important;
+  font-weight: bold !important;
+}
+
+.no-cssgradients :global(.dark) .prose strong,
+.no-cssgradients :global(.dark) .prose b,
+.no-cssgradients :global(.dark) strong,
+.no-cssgradients :global(.dark) b {
+  background-color: #14532d !important;
+  border: 2px solid #166534 !important;
+  color: #bbf7d0 !important;
+}
+
+/* Modern browsers fallback using @supports */
 @supports not (background: linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%)) {
   .prose strong,
   .prose b,
   strong,
   b {
-    background-color: #dcfce7;
+    background-color: #dcfce7 !important;
+    border: 2px solid #bbf7d0;
+    font-weight: bold;
   }
   
   :global(.dark) .prose strong,
   :global(.dark) .prose b,
   :global(.dark) strong,
   :global(.dark) b {
-    background-color: #14532d;
+    background-color: #14532d !important;
+    border: 2px solid #166534;
+    color: #bbf7d0;
   }
+}
+
+/* Internet Explorer specific styles */
+@media screen\9 {
+  .prose strong,
+  .prose b,
+  strong,
+  b {
+    background-color: #dcfce7;
+    border: 2px solid #bbf7d0;
+    font-weight: bold;
+    zoom: 1; /* IE hasLayout trigger */
+  }
+}
+
+/* Additional emphasis for screen readers and accessibility */
+.prose strong::before,
+.prose b::before,
+strong::before,
+b::before {
+  content: "";
+  speak: literal-punctuation;
+}
+
+.prose strong::after,
+.prose b::after,
+strong::after,
+b::after {
+  content: "";
+  speak: literal-punctuation;
 }

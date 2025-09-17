@@ -23,13 +23,16 @@ const { title, description, pubDate, updatedDate, heroImage, readingTime = '5 mi
 // Fix for the canonicalURL creation
 let canonicalURL;
 try {
-  canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://example.com');
+  canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://heliboss.cl');
 } catch (error) {
   console.error('Error creating canonical URL:', error);
-  canonicalURL = new URL('https://example.com');
+  canonicalURL = new URL('https://heliboss.cl');
 }
 
 const slug = Astro.url.pathname.split('/').filter(Boolean).pop() || ''; // Ensure slug is a string
+
+// Compute absolute site URL string for JSON-LD and images
+const siteUrl = (Astro.site ? (typeof Astro.site === 'string' ? Astro.site : Astro.site.toString()) : 'https://heliboss.cl');
 
 // Xử lý heroImage an toàn hơn - hỗ trợ cả URL tuyệt đối và đường dẫn tương đối
 let heroImageUrl = null;
@@ -76,7 +79,7 @@ const jsonLD = {
     "name": "Heliboss",
     "logo": {
     "@type": "ImageObject",
-    "url": `${Astro.site || 'https://heliboss.cl'}/NEGRO-optimized.webp`
+    "url": `${Astro.site || 'https://heliboss.cl'}/NEGRO (1).png`
   }
   },
   "datePublished": pubDate.toISOString(),
@@ -89,11 +92,35 @@ const jsonLD = {
   "image": heroImageUrl || `${Astro.site || 'https://heliboss.cl'}/placeholder.jpg`,
   "keywords": tags?.join(', ') || 'drones, DJI, tecnología'
 };
+
+// BreadcrumbList JSON-LD aligned with visible breadcrumbs
+const breadcrumbJsonLD = {
+  "@context": "https://schema.org",
+  "@type": "BreadcrumbList",
+  "itemListElement": [
+    {
+      "@type": "ListItem",
+      "position": 1,
+      "name": "Blog",
+      "item": `${siteUrl.replace(/\/$/, '')}/blog`
+    },
+    {
+      "@type": "ListItem",
+      "position": 2,
+      "name": title,
+      "item": canonicalURL.toString()
+    }
+  ]
+};
 ---
 
 <Layout title={title} description={description}>
   <!-- Datos estructurados JSON-LD -->
   <script type="application/ld+json" set:html={JSON.stringify(jsonLD)} />
+  <!-- BreadcrumbList JSON-LD -->
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbJsonLD)} slot="head" />
+  <!-- Forward page-provided head slot (e.g., prev/next links) to parent layout head -->
+  <slot name="head" slot="head" />
   
   <!-- Meta tags adicionales para redes sociales -->
   <meta property="og:type" content="article" slot="head" />

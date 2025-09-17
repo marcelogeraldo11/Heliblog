@@ -13,6 +13,25 @@ export interface Props {
 }
 
 const { title, description = "Blog profesional sobre tecnología de drones, sistemas aéreos y las últimas innovaciones en el sector. Análisis técnico y tendencias del mercado." } = Astro.props;
+
+// Build absolute canonical URL and site URL strings
+let canonicalURL: URL;
+try {
+  canonicalURL = new URL(Astro.url.pathname, Astro.site || 'https://heliboss.cl');
+} catch (e) {
+  canonicalURL = new URL('https://heliboss.cl' + Astro.url.pathname);
+}
+const siteUrl = (Astro.site ? (typeof Astro.site === 'string' ? Astro.site : Astro.site.toString()) : 'https://heliboss.cl');
+
+// Organization JSON-LD (dynamic)
+const orgJsonLD = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  "name": "Heliboss Blog",
+  "url": siteUrl,
+  "logo": `${siteUrl.replace(/\/$/, '')}/favicon.svg`,
+  "description": "Blog profesional sobre tecnología de drones, sistemas aéreos y las últimas innovaciones en el sector."
+};
 ---
 
 <!DOCTYPE html>
@@ -37,15 +56,15 @@ const { title, description = "Blog profesional sobre tecnología de drones, sist
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     
     <!-- Preload critical images with high priority -->
-    <link rel="preload" href="/NEGRO-optimized.webp" as="image" type="image/webp" fetchpriority="high" />
+    <!-- removed preload of obsolete logo /NEGRO-optimized.webp -->
+    <link rel="preload" href="/NEGRO (1).png" as="image" type="image/png" fetchpriority="high" />
     
     <!-- Font loading optimization -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" /></noscript>
     
     <!-- Resource hints for better performance -->
-    <link rel="prefetch" href="/api/posts" />
-    <link rel="modulepreload" href="/_astro/client.js" />
+    <!-- removed unstable dev hints to prevent 404 and HMR issues -->
     
     <!-- Critical CSS inlined - Optimized for performance -->
     <style>
@@ -59,20 +78,26 @@ const { title, description = "Blog profesional sobre tecnología de drones, sist
     
     <!-- Open Graph / Facebook -->
     <meta property="og:type" content="website" />
-    <meta property="og:url" content={Astro.url} />
+    <meta property="og:url" content={canonicalURL.toString()} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:site_name" content="Heliboss Blog" />
     <meta property="og:locale" content="es_CL" />
+    <!-- Default OG image for non-article pages -->
+    <meta property="og:image" content={`${siteUrl.replace(/\/$/, '')}/NEGRO (1).png`} />
+    <meta property="og:image:alt" content="Heliboss" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     
     <!-- Twitter -->
     <meta property="twitter:card" content="summary_large_image" />
-    <meta property="twitter:url" content={Astro.url} />
+    <meta property="twitter:url" content={canonicalURL.toString()} />
     <meta property="twitter:title" content={title} />
     <meta property="twitter:description" content={description} />
+    <meta name="twitter:image" content={`${siteUrl.replace(/\/$/, '')}/NEGRO (1).png`} />
     
     <!-- Canonical URL -->
-    <link rel="canonical" href={Astro.url} />
+    <link rel="canonical" href={canonicalURL.toString()} />
     
     <!-- RSS Feed -->
     <link rel="alternate" type="application/rss+xml" title="Heliboss Blog RSS" href="/rss.xml" />
@@ -85,21 +110,8 @@ const { title, description = "Blog profesional sobre tecnología de drones, sist
     <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
     <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     
-    <!-- Datos estructurados para la organización -->
-    <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "Organization",
-      "name": "Heliboss Blog",
-      "url": "https://heliblog.netlify.app",
-      "logo": "https://heliblog.netlify.app/favicon.svg",
-      "description": "Blog personal sobre desarrollo web, tecnología y programación",
-      "sameAs": [
-        "https://github.com/heliboss",
-        "https://twitter.com/heliboss"
-      ]
-    }
-    </script>
+    <!-- Datos estructurados para la organización (dinámico) -->
+    <script type="application/ld+json" set:html={JSON.stringify(orgJsonLD)} />
 
     <!-- Service Worker Registration -->
     <script>
@@ -161,6 +173,8 @@ const { title, description = "Blog profesional sobre tecnología de drones, sist
         optimizeImages();
       }
     </script>
+    <!-- Page-specific head injections -->
+    <slot name="head" />
   </head>
   <body class="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 min-h-screen flex flex-col">
     <!-- ViewTransitions for smooth page navigation -->

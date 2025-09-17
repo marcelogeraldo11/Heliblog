@@ -98,10 +98,8 @@ export default defineConfig({
     split: true,
   },
   compressHTML: true,
-  prefetch: {
-    prefetchAll: true,
-    defaultStrategy: 'viewport',
-  },
+  // prefetch disabled in dev to avoid unnecessary network noise and errors
+  prefetch: false,
   // Configuraciones adicionales para rendimiento
   server: {
     headers: {

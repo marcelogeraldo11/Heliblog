@@ -1,290 +1,235 @@
 ---
-import ThemeToggle from './ThemeToggle.astro';
-import SearchBox from './SearchBox.astro';
-import { Image } from 'astro:assets';
-import GSAPAnimations from './GSAPAnimations.astro';
-
-const navItems = [
-  { text: 'Inicio', href: '/' },
-  { text: 'Blog', href: '/blog' },
-  { text: 'Buscar', href: '/search' },
-  { text: 'Archivo', href: '/archive' },
-  { text: 'Temas', href: '/tags' },
-  { text: 'Nosotros', href: '/about' },
-];
-
-// Get current path for active link highlighting
-const pathname = new URL(Astro.request.url).pathname;
-const currentPath = pathname === '/' ? '/' : pathname; // Keep full path
+// Navbar replanteado con Tailwind CSS para mejor visualización móvil
 ---
 
-<header class="py-4 fixed top-0 left-0 right-0 z-40 bg-white dark:bg-zinc-900 border-b border-zinc-100 dark:border-zinc-800">
-  <div class="max-w-3xl mx-auto px-4 flex items-center justify-between">
-    <!-- Logo with dynamic light/dark mode images -->
-    <a href="/" class="flex items-center">
-      <Image src="/NEGRO-optimized.webp" alt="Heliboss Logo" class="h-8 w-auto block dark:hidden" width={120} height={32} loading="eager" decoding="async" fetchpriority="high" />
-        <Image src="/BLANCO.png" alt="Heliboss Logo" class="h-8 w-auto hidden dark:block" width={120} height={32} loading="eager" decoding="async" fetchpriority="high" />
-    </a>
-    
-    <!-- Desktop Navigation -->
-    <nav class="hidden sm:flex items-center space-x-6">
-      {navItems.map(item => {
-        const isActive = currentPath === item.href || (currentPath.startsWith(item.href) && item.href !== '/');
-        return (
-          <a 
-            href={item.href} 
-            class={`text-sm transition-all duration-200 ${isActive 
-              ? 'font-bold text-white bg-zinc-900 dark:text-zinc-900 dark:bg-white px-3 py-1 rounded-md shadow-sm !important' 
-              : 'font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'}`}
-          >
-            <span class="gsap-span nav-desktop-span">{item.text}</span>
-          </a>
-        )
-      })}
-      <ThemeToggle />
-    </nav>
-    
-    <!-- Mobile Menu Button -->
-    <button id="mobile-menu-button" class="sm:hidden flex items-center" aria-label="Menú">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 text-zinc-900 dark:text-white">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" />
-      </svg>
-    </button>
+<header class="fixed top-0 left-0 right-0 z-50 bg-white dark:bg-zinc-900 transition-colors duration-300 border-b border-gray-100 dark:border-gray-800">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex items-center justify-between h-16 sm:h-20">
+      
+      <!-- Logo -->
+      <div class="flex-shrink-0">
+        <a href="/" class="flex items-center space-x-2">
+          <img 
+            src="/NEGRO (1).png" 
+            alt="Heliboss Logo" 
+            class="h-8 w-auto object-contain block dark:hidden" width="130" height="40" loading="eager" decoding="async" />
+            <img 
+              src="/BLANCO (2).webp" 
+              alt="Heliboss Logo" 
+              class="h-8 sm:h-10 w-auto hidden dark:block"
+              loading="eager"
+            />
+        </a>
+      </div>
+
+      <!-- Desktop Navigation -->
+      <nav class="hidden md:flex items-center space-x-8">
+        <a href="/" class="nav-link text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors duration-200">
+          Inicio
+        </a>
+        <a href="/blog" class="nav-link text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors duration-200">
+          Blog
+        </a>
+        <a href="/about" class="nav-link text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors duration-200">
+          Nosotros
+        </a>
+        <a href="/archive" class="nav-link text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors duration-200">
+          Archivo
+        </a>
+        <a href="/search" class="nav-link text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 px-3 py-2 text-sm font-medium transition-colors duration-200">
+          Buscar
+        </a>
+        
+        <!-- Theme Toggle Desktop -->
+        <button 
+          id="theme-toggle" 
+          class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+          aria-label="Cambiar tema"
+        >
+          <svg class="w-5 h-5 text-gray-600 dark:text-gray-300 sun-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06L5.106 17.834a.75.75 0 001.06 1.06l1.592-1.591zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.592a.75.75 0 00-1.061 1.061l1.59 1.591z"/>
+          </svg>
+          <svg class="w-5 h-5 text-gray-600 dark:text-gray-300 moon-icon hidden" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"/>
+          </svg>
+        </button>
+      </nav>
+
+      <!-- Mobile menu button -->
+      <div class="md:hidden flex items-center space-x-2">
+        <!-- Theme Toggle Mobile -->
+        <button 
+          id="mobile-theme-toggle" 
+          class="p-2 rounded-lg bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors duration-200"
+          aria-label="Cambiar tema"
+        >
+          <svg class="w-5 h-5 text-gray-600 dark:text-gray-300 sun-icon" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06L5.106 17.834a.75.75 0 001.06 1.06l1.592-1.591zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.592a.75.75 0 00-1.061 1.061l1.59 1.591z"/>
+          </svg>
+          <svg class="w-5 h-5 text-gray-600 dark:text-gray-300 moon-icon hidden" fill="currentColor" viewBox="0 0 24 24">
+            <path d="M9.528 1.718a.75.75 0 01.162.819A8.97 8.97 0 009 6a9 9 0 009 9 8.97 8.97 0 003.463-.69.75.75 0 01.981.98 10.503 10.503 0 01-9.694 6.46c-5.799 0-10.5-4.701-10.5-10.5 0-4.368 2.667-8.112 6.46-9.694a.75.75 0 01.818.162z"/>
+          </svg>
+        </button>
+        
+        <!-- Hamburger Menu Button -->
+        <button 
+          id="mobile-menu-button" 
+          class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-200"
+          aria-label="Abrir menú"
+        >
+          <svg class="w-6 h-6 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mobile Navigation Menu -->
+  <div id="mobile-menu" class="md:hidden hidden bg-white dark:bg-zinc-900 border-t border-gray-100 dark:border-gray-800">
+    <div class="px-4 py-3 space-y-1">
+      <a href="/" class="nav-link block px-3 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-lg transition-colors duration-200">
+        Inicio
+      </a>
+      <a href="/blog" class="nav-link block px-3 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-lg transition-colors duration-200">
+        Blog
+      </a>
+      <a href="/about" class="nav-link block px-3 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-lg transition-colors duration-200">
+        Nosotros
+      </a>
+      <a href="/archive" class="nav-link block px-3 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-lg transition-colors duration-200">
+        Archivo
+      </a>
+      <a href="/search" class="nav-link block px-3 py-3 text-base font-medium text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 hover:bg-gray-50 dark:hover:bg-zinc-800 rounded-lg transition-colors duration-200">
+        Buscar
+      </a>
+    </div>
   </div>
 </header>
 
-<!-- Mobile Menu Overlay -->
-<div id="mobile-menu" class="fixed inset-0 z-50 bg-white dark:bg-zinc-900 flex flex-col opacity-0 pointer-events-none transition-all duration-300 ease-in-out">
-  <div class="flex justify-between items-center p-4 border-b border-zinc-100 dark:border-zinc-800">
-    <a href="/" class="flex items-center">
-      <Image src="/NEGRO-optimized.webp" alt="Heliboss Logo" class="h-8 w-auto block dark:hidden" width={120} height={32} loading="eager" decoding="async" fetchpriority="high" />
-        <Image src="/BLANCO.png" alt="Heliboss Logo" class="h-8 w-auto hidden dark:block" width={120} height={32} loading="eager" decoding="async" fetchpriority="high" />
-    </a>
-    <button id="close-menu-button" class="text-zinc-900 dark:text-white p-2 rounded-md hover:bg-zinc-100 dark:hover:bg-zinc-800 transition-colors" aria-label="Cerrar menú">
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-      </svg>
-    </button>
-  </div>
-  
-  <nav class="flex-1 flex flex-col items-center justify-center space-y-6 text-center">
-    {navItems.map((item, index) => {
-      const isActive = currentPath === item.href || (currentPath.startsWith(item.href) && item.href !== '/');
-      return (
-        <a 
-          href={item.href} 
-          class={`text-lg mobile-nav-item opacity-0 translate-y-4 transition-all duration-200 ${isActive 
-            ? 'font-bold text-white bg-zinc-900 dark:text-zinc-900 dark:bg-white px-4 py-2 rounded-md shadow-sm !important' 
-            : 'font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'}`}
-          style={`transition-delay: ${index * 0.05}s;`}
-        >
-          <span class="gsap-span nav-mobile-span">{item.text}</span>
-        </a>
-      )
-    })}
-    <div class="pt-4 mobile-nav-item opacity-0 translate-y-4" style="transition-delay: 0.25s;">
-      <ThemeToggle />
-    </div>
-  </nav>
-</div>
-
-<!-- Spacer to prevent content from hiding behind fixed header -->
-<div class="h-16"></div>
-
 <script>
-  // Enhanced mobile menu toggle with animations
-  document.addEventListener('DOMContentLoaded', () => {
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const closeMenuButton = document.getElementById('close-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
-    const navItems = document.querySelectorAll('.mobile-nav-item');
-    
-    // Open menu with animations
-    mobileMenuButton?.addEventListener('click', () => {
-      if (!mobileMenu) return;
+  // Mobile menu toggle
+  const mobileMenuButton = document.getElementById('mobile-menu-button');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', () => {
+      mobileMenu.classList.toggle('hidden');
       
-      // Prevent body scrolling
-      document.body.style.overflow = 'hidden';
+      // Update aria-label
+      const isOpen = !mobileMenu.classList.contains('hidden');
+      mobileMenuButton.setAttribute('aria-label', isOpen ? 'Cerrar menú' : 'Abrir menú');
       
-      // Show menu with fade in
-      mobileMenu.classList.remove('pointer-events-none');
-      mobileMenu.classList.add('pointer-events-auto');
-      
-      // Animate opacity
-      setTimeout(() => {
-        mobileMenu.style.opacity = '1';
-        
-        // Animate each nav item with staggered delay
-        navItems.forEach(item => {
-          setTimeout(() => {
-            item.classList.remove('opacity-0', 'translate-y-4');
-          }, 150);
-        });
-      }, 50);
-    });
-    
-    // Close menu with animations
-    const closeMenu = () => {
-      if (!mobileMenu) return;
-      
-      // Fade out nav items first
-      navItems.forEach(item => {
-        item.classList.add('opacity-0', 'translate-y-4');
-      });
-      
-      // Then fade out the menu
-      setTimeout(() => {
-        mobileMenu.style.opacity = '0';
-        
-        // After animation completes, hide menu and restore scrolling
-        setTimeout(() => {
-          mobileMenu.classList.remove('pointer-events-auto');
-          mobileMenu.classList.add('pointer-events-none');
-          document.body.style.overflow = '';
-        }, 300);
-      }, 100);
-    };
-    
-    // Close button event
-    closeMenuButton?.addEventListener('click', closeMenu);
-    
-    // Close menu when clicking a link
-    const mobileLinks = mobileMenu?.querySelectorAll('a');
-    mobileLinks?.forEach(link => {
-      link.addEventListener('click', closeMenu);
-    });
-    
-    // Close menu on escape key
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && mobileMenu?.classList.contains('pointer-events-auto')) {
-        closeMenu();
-      }
-    });
-    
-    // Add smooth animation to header on scroll
-    const header = document.querySelector('header');
-    let lastScrollY = window.scrollY;
-    
-    window.addEventListener('scroll', () => {
-      if (!header) return;
-      
-      const currentScrollY = window.scrollY;
-      
-      // Add shadow on scroll
-      if (currentScrollY > 10) {
-        header.classList.add('shadow-sm');
+      // Update hamburger icon
+      const svg = mobileMenuButton.querySelector('svg');
+      if (isOpen) {
+        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>';
       } else {
-        header.classList.remove('shadow-sm');
-      }
-      
-      // Update last scroll position
-      lastScrollY = currentScrollY;
-    }, { passive: true });
-    
-    // Function to update active navigation state
-    const updateActiveNavigation = () => {
-      const currentPath = window.location.pathname;
-      const navLinks = document.querySelectorAll('nav a[href]');
-      
-      navLinks.forEach(link => {
-        const href = link.getAttribute('href');
-        const isActive = currentPath === href || (currentPath.startsWith(href) && href !== '/');
-        
-        // Remove all active classes
-        link.classList.remove('font-bold', 'text-white', 'bg-zinc-900', 'dark:text-zinc-900', 'dark:bg-white', 'px-3', 'py-1', 'px-4', 'py-2', 'rounded-md', 'shadow-sm');
-        link.classList.remove('font-medium', 'text-zinc-600', 'hover:text-zinc-900', 'dark:text-zinc-400', 'dark:hover:text-white');
-        
-        if (isActive) {
-          // Add active classes
-          link.classList.add('font-bold', 'text-white', 'bg-zinc-900', 'dark:text-zinc-900', 'dark:bg-white', 'shadow-sm');
-          // Add appropriate padding based on context (desktop vs mobile)
-          if (link.closest('.mobile-nav-item')) {
-            link.classList.add('px-4', 'py-2');
-          } else {
-            link.classList.add('px-3', 'py-1');
-          }
-          link.classList.add('rounded-md');
-        } else {
-          // Add inactive classes
-          link.classList.add('font-medium', 'text-zinc-600', 'hover:text-zinc-900', 'dark:text-zinc-400', 'dark:hover:text-white');
-        }
-      });
-    };
-    
-    // Update navigation on page load
-    updateActiveNavigation();
-    
-    // Listen for navigation changes (for SPA-like behavior)
-    window.addEventListener('popstate', updateActiveNavigation);
-    
-    // Override link clicks to update navigation immediately
-    document.addEventListener('click', (e) => {
-      const link = e.target.closest('a[href]');
-      if (link && link.getAttribute('href').startsWith('/')) {
-        // Small delay to allow navigation to complete
-        setTimeout(updateActiveNavigation, 10);
+        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
       }
     });
-   });
+  }
+
+  // Theme toggle functionality
+  function initThemeToggle() {
+    const themeToggle = document.getElementById('theme-toggle');
+    const mobileThemeToggle = document.getElementById('mobile-theme-toggle');
+    const savedTheme = localStorage.getItem('theme');
+    
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.contains('dark');
+      
+      if (isDark) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('theme', 'dark');
+      }
+      
+      updateThemeIcons();
+    }
+    
+    function updateThemeIcons() {
+      const isDark = document.documentElement.classList.contains('dark');
+      const sunIcons = document.querySelectorAll('.sun-icon');
+      const moonIcons = document.querySelectorAll('.moon-icon');
+      
+      sunIcons.forEach(icon => {
+        icon.classList.toggle('hidden', isDark);
+      });
+      
+      moonIcons.forEach(icon => {
+        icon.classList.toggle('hidden', !isDark);
+      });
+    }
+    
+    // Initialize theme
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    
+    if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
+      document.documentElement.classList.add('dark');
+    }
+    
+    updateThemeIcons();
+    
+    // Event listeners
+    if (themeToggle) {
+      themeToggle.addEventListener('click', toggleTheme);
+    }
+    
+    if (mobileThemeToggle) {
+      mobileThemeToggle.addEventListener('click', toggleTheme);
+    }
+  }
+
+  // Initialize when DOM is ready
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initThemeToggle);
+  } else {
+    initThemeToggle();
+  }
+
+  // Set active link
+  function setActiveLink() {
+    const currentPath = window.location.pathname;
+    const navLinks = document.querySelectorAll('.nav-link');
+    
+    navLinks.forEach(link => {
+      const href = link.getAttribute('href');
+      if (href === currentPath || (currentPath.startsWith('/blog') && href === '/blog')) {
+        link.classList.add('nav-active');
+        link.classList.remove('text-gray-700', 'dark:text-gray-300');
+      } else {
+        link.classList.remove('nav-active');
+        link.classList.add('text-gray-700', 'dark:text-gray-300');
+      }
+    });
+  }
+
+  // Execute on page load
+  setActiveLink();
+
+  // Close mobile menu when clicking outside
+  document.addEventListener('click', (event) => {
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuButton = document.getElementById('mobile-menu-button');
+    
+    if (mobileMenu && !mobileMenu.classList.contains('hidden')) {
+      if (!mobileMenu.contains(event.target) && !mobileMenuButton.contains(event.target)) {
+        mobileMenu.classList.add('hidden');
+        mobileMenuButton.setAttribute('aria-label', 'Abrir menú');
+        
+        // Reset hamburger icon
+        const svg = mobileMenuButton.querySelector('svg');
+        svg.innerHTML = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>';
+      }
+    }
+  });
 </script>
 
 <style>
-  /* Smooth animations for mobile navigation */
-  .mobile-nav-item {
-    transition: opacity 0.5s ease, transform 0.5s ease, color 0.3s ease;
-  }
-  
-  /* Header transition */
-  header {
-    transition: box-shadow 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
-  }
-  
-  /* Mobile menu button hover effect */
-  #mobile-menu-button {
-    transition: transform 0.2s ease;
-  }
-  
-  #mobile-menu-button:hover {
-    transform: scale(1.05);
-  }
-  
-  /* Mobile menu transition */
-  #mobile-menu {
-    transition: opacity 0.3s ease;
-    backdrop-filter: blur(4px);
-  }
-  
-  /* Active navigation state - persistent styling */
-  nav a[class*="text-white bg-zinc-900"],
-  nav a[class*="dark:text-zinc-900 dark:bg-white"] {
-    color: white !important;
-    background-color: rgb(24 24 27) !important;
-    font-weight: 500 !important;
-    border-radius: 0.375rem !important;
-    box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05) !important;
-  }
-  
-  .dark nav a[class*="text-white bg-zinc-900"],
-  .dark nav a[class*="dark:text-zinc-900 dark:bg-white"] {
-    color: rgb(24 24 27) !important;
-    background-color: white !important;
-  }
-  
-  /* Ensure active state persists on hover */
-  nav a[class*="text-white bg-zinc-900"]:hover,
-  nav a[class*="dark:text-zinc-900 dark:bg-white"]:hover {
-    color: white !important;
-    background-color: rgb(24 24 27) !important;
-  }
-  
-  .dark nav a[class*="text-white bg-zinc-900"]:hover,
-  .dark nav a[class*="dark:text-zinc-900 dark:bg-white"]:hover {
-    color: rgb(24 24 27) !important;
-    background-color: white !important;
-  }
+  .nav-active { color: rgb(71, 208, 121) !important; }
+  .nav-link.nav-active:hover { color: rgb(71, 208, 121) !important; }
 </style>
-
-<!-- GSAP Animation Components for Navigation -->
-<GSAPAnimations selector=".nav-desktop-span" animation="slideInLeft" duration={0.8} stagger={0.1} />
-<GSAPAnimations selector=".nav-mobile-span" animation="wave" duration={1.0} stagger={0.15} />
 

@@ -1,5 +1,4 @@
 ---
-import { Image } from 'astro:assets';
 import GSAPAnimations from './GSAPAnimations.astro';
 import Newsletter from './Newsletter.astro';
 
@@ -42,7 +41,7 @@ const socialLinks = [
     <div class="absolute top-20 left-1/4 w-40 h-40 bg-zinc-200/50 dark:bg-zinc-700/20 rounded-full blur-2xl opacity-30 theme-transition-all animate-float-slow animation-delay-1000"></div>
   </div>
   
-  <div class="relative pt-16 pb-12 px-4 sm:px-6">
+  <div class="relative pt-16 pb-16 px-4 sm:px-6">
     <div class="max-w-4xl mx-auto">
       <!-- Main footer content with improved grid layout -->
       <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -51,10 +50,10 @@ const socialLinks = [
           <a href="/" class="inline-block group">
             <div class="flex items-center">
               <div class="relative flex items-center justify-center overflow-hidden transform transition-transform group-hover:scale-105">
-                <Image src="/NEGRO-optimized.webp" alt="Heliboss Logo" class="h-10 w-auto block dark:hidden group-hover:scale-110 transition-transform duration-300" width={150} height={40} loading="lazy" decoding="async" />
-        <Image src="/BLANCO.png" alt="Heliboss Logo" class="h-10 w-auto hidden dark:block group-hover:scale-110 transition-transform duration-300" width={150} height={40} loading="lazy" decoding="async" />
+                <img src="/NEGRO (1).png" alt="Heliboss Logo" class="h-10 w-auto object-contain block dark:hidden group-hover:scale-110 transition-transform duration-300 drop-shadow-sm" width="150" height="40" loading="lazy" decoding="async" />
+                <img src="/BLANCO (2).webp" alt="Heliboss Logo" class="h-10 w-auto object-contain hidden dark:block group-hover:scale-110 transition-transform duration-300 drop-shadow" width="150" height="40" loading="lazy" decoding="async" />
               </div>
-              <span class="ml-3 text-xl font-bold text-zinc-900 dark:text-zinc-100 theme-transition-color">Blog</span>
+              <span class="ml-3 text-xl font-extrabold text-[rgb(71,208,121)] dark:text-[rgb(71,208,121)] tracking-tight leading-none theme-transition-color">Blog</span>
             </div>
           </a>
           

@@ -31,147 +31,6 @@ img, video {
   }
 }
 
-/* Cross-browser compatibility improvements */
-/* Normalize CSS for consistent rendering across browsers */
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-}
-
-/* Ensure consistent font rendering */
-body {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-rendering: optimizeLegibility;
-}
-
-/* Fix flexbox issues in older browsers */
-.flex {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.flex-col {
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-  -ms-flex-direction: column;
-  flex-direction: column;
-}
-
-/* Grid fallbacks for older browsers */
-@supports not (display: grid) {
-  .grid {
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -ms-flex-wrap: wrap;
-    flex-wrap: wrap;
-  }
-  
-  .grid > * {
-    -webkit-box-flex: 1;
-    -ms-flex: 1 1 300px;
-    flex: 1 1 300px;
-  }
-}
-
-/* Ensure images work properly in all browsers */
-img {
-  max-width: 100%;
-  height: auto;
-  border: 0;
-  -ms-interpolation-mode: bicubic;
-}
-
-/* Fix button styling across browsers */
-button {
-  background: none;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline: inherit;
-}
-
-/* Smooth scrolling with fallback */
-@media (prefers-reduced-motion: no-preference) {
-  html {
-    scroll-behavior: smooth;
-  }
-}
-
-/* CSS custom properties fallbacks */
-:root {
-  --color-primary: #000000;
-  --color-secondary: #ffffff;
-  --color-accent: #22c55e;
-}
-
-/* Dark mode with fallback */
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-primary: #ffffff;
-    --color-secondary: #000000;
-  }
-}
-
-/* Ensure transforms work in older browsers */
-.transform {
-  -webkit-transform: translateZ(0);
-  transform: translateZ(0);
-}
-
-/* Fix transition issues */
-.transition {
-  -webkit-transition: all 0.3s ease;
-  -o-transition: all 0.3s ease;
-  transition: all 0.3s ease;
-}
-
-/* Responsive design improvements */
-@media screen and (max-width: 640px) {
-  /* Mobile-first responsive adjustments */
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-  
-  /* Ensure touch targets are large enough */
-  button, a {
-    min-height: 44px;
-    min-width: 44px;
-  }
-}
-
-/* High contrast mode support */
-@media (prefers-contrast: high) {
-  * {
-    border-color: currentColor !important;
-  }
-}
-
-/* Print styles */
-@media print {
-  * {
-    background: transparent !important;
-    color: black !important;
-    box-shadow: none !important;
-    text-shadow: none !important;
-  }
-  
-  a, a:visited {
-    text-decoration: underline;
-  }
-  
-  img {
-    max-width: 100% !important;
-  }
-}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -219,7 +78,6 @@ button {
   }
 }
 
-
 /* Add smooth animations */
 @keyframes fadeIn {
   from {
@@ -234,18 +92,6 @@ button {
 @keyframes slideUp {
   from {
     transform: translateY(20px);
-    opacity: 0;
-  }
-
-  to {
-    transform: translateY(0);
-    opacity: 1;
-  }
-}
-
-@keyframes slideDown {
-  from {
-    transform: translateY(-20px);
     opacity: 0;
   }
 
@@ -276,10 +122,6 @@ button {
   animation: slideUp 0.6s ease forwards;
 }
 
-.animate-slide-down {
-  animation: slideDown 0.6s ease forwards;
-}
-
 .animate-scale-in {
   animation: scaleIn 0.6s ease forwards;
 }
@@ -297,175 +139,36 @@ button {
   animation-delay: 0.3s;
 }
 
-.delay-400 {
-  animation-delay: 0.4s;
-}
-
 /* Smooth hover transitions */
 a,
 button {
   transition: all 0.2s ease;
 }
 
-a:hover,
-button:hover {
-  transform: translateY(-1px);
-}
-
-/* Smooth page transitions */
-.page-transition {
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.page-entering {
-  opacity: 0;
-  transform: translateY(10px);
-}
-
-.page-entered {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Green highlight for bold text in markdown content - Maximum cross-browser compatibility */
+/* Green highlight for bold text in markdown content */
 .prose strong,
 .prose b,
 strong,
 b {
-  /* Fallback background color for oldest browsers */
-  background-color: #dcfce7;
-
-  /* Modern gradient with all vendor prefixes */
-  background: -webkit-gradient(linear, left top, right bottom, from(#dcfce7), to(#bbf7d0));
-  background: -webkit-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
-  background: -moz-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
-  background: -o-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
-  background: -ms-linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
   background: linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%);
-
-  /* Spacing and typography */
   padding: 0.125rem 0.25rem;
   margin: 0 0.0625rem;
   border-radius: 0.25rem;
   font-weight: 600;
-  font-weight: bold;
-  /* Fallback for older browsers */
   color: #166534;
-
-  /* Text decoration and display properties */
   text-decoration: none;
   display: inline;
   line-height: 1.4;
-
-  /* Box decoration for text wrapping */
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
-  -moz-box-decoration-break: clone;
-
-  /* Additional border for browsers that don't support gradients */
-  border: 1px solid transparent;
-
-  /* Smooth transitions */
   transition: all 0.2s ease;
-  -webkit-transition: all 0.2s ease;
-  -moz-transition: all 0.2s ease;
-  -o-transition: all 0.2s ease;
 }
 
-/* Dark mode support for green highlight - Maximum cross-browser compatibility */
+/* Dark mode support for green highlight */
 :global(.dark) .prose strong,
 :global(.dark) .prose b,
 :global(.dark) strong,
 :global(.dark) b {
-  /* Fallback background color for oldest browsers */
-  background-color: #14532d;
-
-  /* Modern gradient with all vendor prefixes */
-  background: -webkit-gradient(linear, left top, right bottom, from(#14532d), to(#166534));
-  background: -webkit-linear-gradient(120deg, #14532d 0%, #166534 100%);
-  background: -moz-linear-gradient(120deg, #14532d 0%, #166534 100%);
-  background: -o-linear-gradient(120deg, #14532d 0%, #166534 100%);
-  background: -ms-linear-gradient(120deg, #14532d 0%, #166534 100%);
   background: linear-gradient(120deg, #14532d 0%, #166534 100%);
-
-  /* Dark mode text color */
   color: #bbf7d0;
-
-  /* Additional border for browsers that don't support gradients */
-  border: 1px solid #166534;
-}
-
-/* Enhanced fallbacks for maximum browser compatibility */
-
-/* For browsers that don't support @supports (IE) */
-.no-cssgradients .prose strong,
-.no-cssgradients .prose b,
-.no-cssgradients strong,
-.no-cssgradients b {
-  background-color: #dcfce7 !important;
-  border: 2px solid #bbf7d0 !important;
-  font-weight: bold !important;
-}
-
-.no-cssgradients :global(.dark) .prose strong,
-.no-cssgradients :global(.dark) .prose b,
-.no-cssgradients :global(.dark) strong,
-.no-cssgradients :global(.dark) b {
-  background-color: #14532d !important;
-  border: 2px solid #166534 !important;
-  color: #bbf7d0 !important;
-}
-
-/* Modern browsers fallback using @supports */
-@supports not (background: linear-gradient(120deg, #dcfce7 0%, #bbf7d0 100%)) {
-
-  .prose strong,
-  .prose b,
-  strong,
-  b {
-    background-color: #dcfce7 !important;
-    border: 2px solid #bbf7d0;
-    font-weight: bold;
-  }
-
-  :global(.dark) .prose strong,
-  :global(.dark) .prose b,
-  :global(.dark) strong,
-  :global(.dark) b {
-    background-color: #14532d !important;
-    border: 2px solid #166534;
-    color: #bbf7d0;
-  }
-}
-
-/* Internet Explorer specific styles */
-@media screen\9 {
-
-  .prose strong,
-  .prose b,
-  strong,
-  b {
-    background-color: #dcfce7;
-    border: 2px solid #bbf7d0;
-    font-weight: bold;
-    zoom: 1;
-    /* IE hasLayout trigger */
-  }
-}
-
-/* Additional emphasis for screen readers and accessibility */
-.prose strong::before,
-.prose b::before,
-strong::before,
-b::before {
-  content: "";
-  speak: literal-punctuation;
-}
-
-.prose strong::after,
-.prose b::after,
-strong::after,
-b::after {
-  content: "";
-  speak: literal-punctuation;
 }

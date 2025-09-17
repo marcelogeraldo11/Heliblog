@@ -330,7 +330,7 @@ const postsThisYear = posts.filter(post => post.data.pubDate.getFullYear() === c
         } else {
           backToTopButton.classList.add('hidden');
         }
-      });
+      }, { passive: true });
 
       backToTopButton.addEventListener('click', () => {
         window.scrollTo({

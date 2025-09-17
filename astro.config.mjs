@@ -53,8 +53,6 @@ export default defineConfig({
     formats: ['avif', 'webp', 'jpg'],
     quality: 80,
   },
-    ],
-  },
   vite: {
     assetsInclude: ['**/*.webp', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg', '**/*.avif'],
     build: {
@@ -99,9 +97,6 @@ export default defineConfig({
     defaultStrategy: 'viewport',
   },
   // Configuraciones adicionales para rendimiento
-  experimental: {
-    optimizeHoistedScript: true,
-  },
   server: {
     headers: {
       'Cache-Control': 'public, max-age=31536000, immutable',

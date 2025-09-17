@@ -27,6 +27,29 @@ export function throttle(func, limit) {
   };
 }
 
+// Optimized scheduler for breaking up long tasks
+export function scheduleWork(tasks, options = {}) {
+  const { timeSlice = 5, deadline = 16 } = options;
+  let taskIndex = 0;
+  
+  function runTasks(startTime) {
+    while (taskIndex < tasks.length && (performance.now() - startTime) < timeSlice) {
+      tasks[taskIndex]();
+      taskIndex++;
+    }
+    
+    if (taskIndex < tasks.length) {
+      if ('scheduler' in window && 'postTask' in window.scheduler) {
+        window.scheduler.postTask(() => runTasks(performance.now()));
+      } else {
+        setTimeout(() => runTasks(performance.now()), 0);
+      }
+    }
+  }
+  
+  runTasks(performance.now());
+}
+
 // Lazy loading observer
 export function createLazyObserver(callback, options = {}) {
   const defaultOptions = {
@@ -48,6 +71,9 @@ export function createLazyObserver(callback, options = {}) {
       callback([{ target: element, isIntersecting: true }]);
     },
     unobserve: () => {},
+    disconnect: () => {}
+  };
+}
     disconnect: () => {}
   };
 }

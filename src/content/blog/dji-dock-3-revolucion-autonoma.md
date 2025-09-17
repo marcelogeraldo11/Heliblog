@@ -2,7 +2,7 @@
 title: "DJI Dock 3: La Revolución de las Operaciones Autónomas de Drones"
 description: "Descubre el DJI Dock 3, la primera solución 'Drone in a Box' con soporte para montaje vehicular que permite operaciones remotas 24/7 en cualquier entorno con los nuevos drones Matrice 4D y 4TD."
 pubDate: 2025-02-27
-heroImage: "/dock3.jpg"
+heroImage: "/dock3.webp"
 tags: ["dji", "dock", "autonomo", "matrice", "enterprise", "operaciones", "vehicular"]
 readingTime: "12 min de lectura"
 ---

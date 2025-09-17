@@ -64,7 +64,7 @@ const skills = [
         <div class="order-1 md:order-2 relative">
           <div class="aspect-square w-full max-w-[280px] sm:max-w-[320px] md:max-w-md mx-auto overflow-hidden rounded-3xl border-4 sm:border-8 border-white dark:border-zinc-800 shadow-xl sm:shadow-2xl theme-transition-all">
             <Image 
-              src="/NEGRO (2).png" 
+              src="/NEGRO-optimized.webp" 
               alt="Heliboss Logo" 
               class="w-full h-full object-contain p-4 block dark:hidden"
               loading="eager"
@@ -73,7 +73,7 @@ const skills = [
               decoding="async"
             />
             <Image 
-              src="/BLANCO (2).png" 
+              src="/BLANCO.png" 
               alt="Heliboss Logo" 
               class="w-full h-full object-contain p-4 hidden dark:block"
               loading="eager"
@@ -353,6 +353,17 @@ const skills = [
   // Wait for the DOM to be fully loaded
   document.addEventListener('DOMContentLoaded', () => {
     const sliderTrack = document.querySelector('.slider-track');
+    const heroSection = document.querySelector('.relative.mb-12');
+    
+    // Add parallax scrolling effect
+    window.addEventListener('scroll', () => {
+      const scrolled = window.pageYOffset;
+      const parallax = scrolled * 0.5;
+      
+      if (heroSection) {
+        heroSection.style.transform = `translateY(${parallax}px)`;
+      }
+    }, { passive: true });
     
     // Create seamless infinite scrolling effect
     function setupInfiniteScroll() {

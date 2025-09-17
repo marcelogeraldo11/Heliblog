@@ -25,7 +25,7 @@ const {
   loading = "lazy",
   decoding = "async",
   quality = 80,
-  format = "avif",
+  format = "webp",
   sizes = "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw",
   placeholder = true,
   priority = false
@@ -39,14 +39,47 @@ const placeholderSvg = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/
 
 // Determine loading strategy
 const loadingStrategy = priority ? 'eager' : loading;
+
+// Helper function to get optimized image paths
+function getOptimizedImagePath(originalSrc: string, size: 'small' | 'medium' | 'original' = 'original') {
+  // Handle specific optimized images
+  if (originalSrc.includes('m400.webp')) {
+    switch (size) {
+      case 'small': return '/m400-small.webp';
+      case 'medium': return '/m400-medium.webp';
+      default: return '/m400.webp';
+    }
+  }
+  
+  if (originalSrc.includes('dock3.jpg')) {
+    switch (size) {
+      case 'small': return '/dock3-small.webp';
+      default: return '/dock3.webp';
+    }
+  }
+  
+  if (originalSrc.includes('NEGRO (2).png')) {
+    return '/NEGRO-optimized.webp';
+  }
+  
+  if (originalSrc.includes('c7b6ac28-2964-4e29-97f4-ab3c9a67ff46.webp')) {
+    return '/c7b6ac28-optimized.webp';
+  }
+  
+  return originalSrc;
+}
+
+const optimizedSrc = getOptimizedImagePath(src);
+const smallSrc = getOptimizedImagePath(src, 'small');
+const mediumSrc = getOptimizedImagePath(src, 'medium');
 ---
 
 <div class="responsive-image-container" data-loading={loadingStrategy}>
   {isExternalUrl ? (
     <!-- External images with enhanced lazy loading -->
     <img 
-      src={loadingStrategy === 'lazy' && placeholder ? placeholderSvg : src}
-      data-src={loadingStrategy === 'lazy' ? src : undefined}
+      src={loadingStrategy === 'lazy' && placeholder ? placeholderSvg : optimizedSrc}
+      data-src={loadingStrategy === 'lazy' ? optimizedSrc : undefined}
       alt={alt} 
       width={width} 
       height={height}
@@ -57,58 +90,39 @@ const loadingStrategy = priority ? 'eager' : loading;
       fetchpriority={priority ? 'high' : 'auto'}
     />
   ) : (
-    <!-- Local images using Astro's optimized Image component -->
-    <Image 
-      src={src} 
-      alt={alt} 
-      width={width} 
-      height={height}
-      class={className}
-      loading={loadingStrategy}
-      decoding={decoding}
-      quality={quality}
-      format={format}
-      sizes={sizes}
-      fetchpriority={priority ? 'high' : 'auto'}
-    />
-  )}
-</div> 
-      height={height} 
-      class={`${className} ${loading === 'lazy' ? 'lazy-image' : ''}`}
-      loading={loading}
-      decoding={decoding}
-      sizes={sizes}
-      fetchpriority={loading === 'eager' ? 'high' : 'auto'}
-      onerror="this.style.display='none'; console.error('Error loading image:', this.src);"
-    />
-  ) : (
-    <!-- Local images use Astro's optimized Image component with multiple formats -->
+    <!-- Local images with responsive srcset for optimized delivery -->
     <picture>
-      <!-- WebP format for modern browsers -->
-      <source 
-        srcset={`${src}?format=webp&width=${Math.round(width * 0.5)}&quality=${quality} ${Math.round(width * 0.5)}w, ${src}?format=webp&width=${width}&quality=${quality} ${width}w, ${src}?format=webp&width=${Math.round(width * 1.5)}&quality=${quality} ${Math.round(width * 1.5)}w`}
-        sizes={sizes}
-        type="image/webp"
-      />
-      <!-- AVIF format for even better compression -->
-      <source 
-        srcset={`${src}?format=avif&width=${Math.round(width * 0.5)}&quality=${quality} ${Math.round(width * 0.5)}w, ${src}?format=avif&width=${width}&quality=${quality} ${width}w, ${src}?format=avif&width=${Math.round(width * 1.5)}&quality=${quality} ${Math.round(width * 1.5)}w`}
-        sizes={sizes}
-        type="image/avif"
-      />
-      <!-- Fallback to original format -->
+      <!-- Small screens: use small version if available -->
+      {smallSrc !== optimizedSrc && (
+        <source 
+          media="(max-width: 640px)"
+          srcset={smallSrc}
+          type="image/webp"
+        />
+      )}
+      
+      <!-- Medium screens: use medium version if available -->
+      {mediumSrc !== optimizedSrc && (
+        <source 
+          media="(max-width: 1024px)"
+          srcset={mediumSrc}
+          type="image/webp"
+        />
+      )}
+      
+      <!-- Default: use optimized version -->
       <Image 
-        src={src} 
+        src={optimizedSrc} 
         alt={alt} 
         width={width} 
-        height={height} 
-        class={`${className} ${loading === 'lazy' ? 'lazy-image' : ''}`}
-        loading={loading}
+        height={height}
+        class={className}
+        loading={loadingStrategy}
         decoding={decoding}
         quality={quality}
         format={format}
         sizes={sizes}
-        fetchpriority={loading === 'eager' ? 'high' : 'auto'}
+        fetchpriority={priority ? 'high' : 'auto'}
       />
     </picture>
   )}
@@ -121,43 +135,31 @@ const loadingStrategy = priority ? 'eager' : loading;
   }
 
   .lazy-image {
-    transition: opacity 0.3s ease, filter 0.3s ease;
-    filter: blur(0px);
-  }
-
-  .lazy-image[data-loading="true"] {
-    opacity: 0.7;
-    filter: blur(2px);
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
   }
 
   .lazy-image.loaded {
     opacity: 1;
-    filter: blur(0px);
   }
 
-  /* Intersection Observer loading animation */
+  /* Blur effect for placeholder */
   .lazy-image:not(.loaded) {
-    background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
-    background-size: 200% 100%;
-    animation: loading 1.5s infinite;
+    filter: blur(5px);
+    transform: scale(1.05);
   }
 
-  @keyframes loading {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
-  }
-
-  /* Dark mode adjustments */
-  :global(.dark) .lazy-image:not(.loaded) {
-    background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
-    background-size: 200% 100%;
+  /* Smooth transition when image loads */
+  .lazy-image.loaded {
+    filter: blur(0);
+    transform: scale(1);
   }
 </style>
 
 <script>
   // Enhanced lazy loading with Intersection Observer
   document.addEventListener('DOMContentLoaded', () => {
-    const lazyImages = document.querySelectorAll('.lazy-image[data-src]');
+    const lazyImages = document.querySelectorAll('.lazy-image');
     
     if ('IntersectionObserver' in window) {
       const imageObserver = new IntersectionObserver((entries, observer) => {
@@ -167,23 +169,21 @@ const loadingStrategy = priority ? 'eager' : loading;
             const src = img.dataset.src;
             
             if (src) {
-              img.setAttribute('data-loading', 'true');
-              
-              // Preload the image
-              const imageLoader = new Image();
-              imageLoader.onload = () => {
+              // Create a new image to preload
+              const newImg = new Image();
+              newImg.onload = () => {
                 img.src = src;
-                img.removeAttribute('data-src');
-                img.setAttribute('data-loading', 'false');
                 img.classList.add('loaded');
-                observer.unobserve(img);
+                img.removeAttribute('data-src');
               };
-              imageLoader.onerror = () => {
+              newImg.onerror = () => {
+                console.error('Error loading image:', src);
                 img.style.display = 'none';
-                observer.unobserve(img);
               };
-              imageLoader.src = src;
+              newImg.src = src;
             }
+            
+            observer.unobserve(img);
           }
         });
       }, {
@@ -199,6 +199,7 @@ const loadingStrategy = priority ? 'eager' : loading;
         if (src) {
           (img as HTMLImageElement).src = src;
           img.removeAttribute('data-src');
+          img.classList.add('loaded');
         }
       });
     }

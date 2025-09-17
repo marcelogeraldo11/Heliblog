@@ -255,8 +255,8 @@ const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
       
       tagItems.forEach(item => {
         item.addEventListener('touchstart', () => {
-          item.classList.add('touch-active');
-        }, { passive: true });
+        item.classList.add('touch-active');
+      }, { passive: true });
         
         item.addEventListener('touchend', () => {
           setTimeout(() => {
@@ -277,7 +277,12 @@ const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
           ) {
             item.classList.remove('touch-active');
           }
-        }, { passive: true });
+          
+          // Prevent default to avoid scrolling issues
+          if (e.cancelable) {
+            e.preventDefault();
+          }
+        }, { passive: false });
       });
     };
     
@@ -693,7 +698,7 @@ const sortedTags = [...tagObjects].sort((a, b) => b.count - a.count);
       tagCards.forEach(card => {
         card.addEventListener('touchstart', () => {
           card.classList.add('is-touched');
-        });
+        }, { passive: true });
         
         card.addEventListener('touchend', () => {
           setTimeout(() => {

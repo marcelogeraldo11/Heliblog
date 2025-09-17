@@ -256,7 +256,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
         document.body.style.width = '100%';
         document.body.style.overflowX = 'hidden';
       });
-    });
+    }, { passive: true });
     
     // Fix for iOS Safari address bar height changes
     if (/iPhone|iPad|iPod/.test(navigator.userAgent)) {

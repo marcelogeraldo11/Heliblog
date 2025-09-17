@@ -152,7 +152,7 @@
       
       // Add touch feedback
       toggle.addEventListener('touchstart', () => {
-        toggle.classList.add('active-touch');
+        toggle.style.transform = 'scale(0.95)';
       }, { passive: true });
       
       toggle.addEventListener('touchend', () => {

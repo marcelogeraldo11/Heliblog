@@ -241,7 +241,7 @@ const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags || []))];
       });
       
       // Check scroll position
-      window.addEventListener('scroll', toggleBackToTopButton);
+      window.addEventListener('scroll', toggleBackToTopButton, { passive: true });
       toggleBackToTopButton(); // Initial check
     }
     
@@ -273,13 +273,13 @@ const allTags = [...new Set(sortedPosts.flatMap(post => post.data.tags || []))];
       articles.forEach(article => {
         article.addEventListener('touchstart', () => {
           article.classList.add('is-touched');
-        });
+        }, { passive: true });
         
         article.addEventListener('touchend', () => {
           setTimeout(() => {
             article.classList.remove('is-touched');
           }, 300);
-        });
+        }, { passive: true });
       });
     }
   });

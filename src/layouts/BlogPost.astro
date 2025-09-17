@@ -75,9 +75,9 @@ const jsonLD = {
     "@type": "Organization",
     "name": "Heliboss",
     "logo": {
-      "@type": "ImageObject",
-      "url": `${Astro.site || 'https://heliboss.cl'}/NEGRO (2).png`
-    }
+    "@type": "ImageObject",
+    "url": `${Astro.site || 'https://heliboss.cl'}/NEGRO-optimized.webp`
+  }
   },
   "datePublished": pubDate.toISOString(),
   "dateModified": (updatedDate || pubDate).toISOString(),
@@ -336,12 +336,41 @@ const jsonLD = {
         const lineNumbers = document.createElement('div');
         lineNumbers.className = 'line-numbers';
         
-        // Always include all lines, including empty ones
-        for (let i = 0; i < lines.length; i++) {
-          const lineNumber = document.createElement('span');
-          lineNumber.textContent = i + 1;
-          lineNumbers.appendChild(lineNumber);
-        }
+        // Use DocumentFragment for better performance
+        const fragment = document.createDocumentFragment();
+        
+        // Break up line number creation into chunks to avoid long tasks
+        const createLineNumbers = (startIndex, endIndex) => {
+          for (let i = startIndex; i < endIndex && i < lines.length; i++) {
+            const lineNumber = document.createElement('span');
+            lineNumber.textContent = i + 1;
+            fragment.appendChild(lineNumber);
+          }
+        };
+        
+        // Process in chunks of 50 lines to avoid blocking the main thread
+        const chunkSize = 50;
+        let currentIndex = 0;
+        
+        const processChunk = () => {
+          const endIndex = Math.min(currentIndex + chunkSize, lines.length);
+          createLineNumbers(currentIndex, endIndex);
+          currentIndex = endIndex;
+          
+          if (currentIndex < lines.length) {
+            // Use scheduler API if available, otherwise setTimeout
+            if ('scheduler' in window && 'postTask' in window.scheduler) {
+              window.scheduler.postTask(processChunk);
+            } else {
+              setTimeout(processChunk, 0);
+            }
+          } else {
+            // All chunks processed, append to DOM
+            lineNumbers.appendChild(fragment);
+          }
+        };
+        
+        processChunk();
         
         codeBlock.parentElement.classList.add('with-line-numbers');
         codeBlock.parentElement.insertBefore(lineNumbers, codeBlock);

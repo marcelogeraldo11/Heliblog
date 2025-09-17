@@ -100,9 +100,6 @@ export function createLazyObserver(callback, options = {}) {
     disconnect: () => {}
   };
 }
-    disconnect: () => {}
-  };
-}
 
 // Preload critical resources
 export function preloadResource(href, as, type = null) {

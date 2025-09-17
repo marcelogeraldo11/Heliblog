@@ -1,10 +1,14 @@
 ---
 import ThemeToggle from './ThemeToggle.astro';
+import SearchBox from './SearchBox.astro';
 import { Image } from 'astro:assets';
+import GSAPAnimations from './GSAPAnimations.astro';
 
 const navItems = [
   { text: 'Inicio', href: '/' },
   { text: 'Blog', href: '/blog' },
+  { text: 'Buscar', href: '/search' },
+  { text: 'Archivo', href: '/archive' },
   { text: 'Temas', href: '/tags' },
   { text: 'Nosotros', href: '/about' },
 ];
@@ -33,7 +37,7 @@ const currentPath = pathname === '/' ? '/' : pathname; // Keep full path
               ? 'font-bold text-white bg-zinc-900 dark:text-zinc-900 dark:bg-white px-3 py-1 rounded-md shadow-sm !important' 
               : 'font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'}`}
           >
-            {item.text}
+            <span class="gsap-span nav-desktop-span">{item.text}</span>
           </a>
         )
       })}
@@ -74,7 +78,7 @@ const currentPath = pathname === '/' ? '/' : pathname; // Keep full path
             : 'font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white'}`}
           style={`transition-delay: ${index * 0.05}s;`}
         >
-          {item.text}
+          <span class="gsap-span nav-mobile-span">{item.text}</span>
         </a>
       )
     })}
@@ -279,4 +283,8 @@ const currentPath = pathname === '/' ? '/' : pathname; // Keep full path
     background-color: white !important;
   }
 </style>
+
+<!-- GSAP Animation Components for Navigation -->
+<GSAPAnimations selector=".nav-desktop-span" animation="slideInLeft" duration={0.8} stagger={0.1} />
+<GSAPAnimations selector=".nav-mobile-span" animation="wave" duration={1.0} stagger={0.15} />
 

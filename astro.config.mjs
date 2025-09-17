@@ -49,9 +49,14 @@ export default defineConfig({
         hostname: 'images.unsplash.com',
       },
     ],
+    // Optimización de imágenes para mejor rendimiento
+    formats: ['avif', 'webp', 'jpg'],
+    quality: 80,
+  },
+    ],
   },
   vite: {
-    assetsInclude: ['**/*.webp', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg'],
+    assetsInclude: ['**/*.webp', '**/*.png', '**/*.jpg', '**/*.jpeg', '**/*.svg', '**/*.avif'],
     build: {
       rollupOptions: {
         output: {
@@ -59,17 +64,32 @@ export default defineConfig({
             vendor: ['react', 'react-dom'],
             astro: ['astro/runtime/client/idle.js', 'astro/runtime/client/load.js'],
           },
+          // Optimización de nombres de archivos para mejor caching
+          assetFileNames: (assetInfo) => {
+            const info = assetInfo.name.split('.');
+            const ext = info[info.length - 1];
+            if (/png|jpe?g|svg|gif|tiff|bmp|ico|webp|avif/i.test(ext)) {
+              return `assets/images/[name]-[hash][extname]`;
+            }
+            if (/css/i.test(ext)) {
+              return `assets/css/[name]-[hash][extname]`;
+            }
+            return `assets/[name]-[hash][extname]`;
+          },
         },
       },
       cssCodeSplit: true,
       minify: 'esbuild',
+      // Configuración para mejor compresión
+      target: 'es2020',
+      sourcemap: false,
     },
     optimizeDeps: {
       include: ['react', 'react-dom'],
     },
   },
   build: {
-    assets: 'assets',
+    assets: '_astro',
     inlineStylesheets: 'auto',
     split: true,
   },
@@ -77,5 +97,14 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
     defaultStrategy: 'viewport',
+  },
+  // Configuraciones adicionales para rendimiento
+  experimental: {
+    optimizeHoistedScript: true,
+  },
+  server: {
+    headers: {
+      'Cache-Control': 'public, max-age=31536000, immutable',
+    },
   },
 });

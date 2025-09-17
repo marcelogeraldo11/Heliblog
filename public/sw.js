@@ -1,19 +1,22 @@
-// Service Worker para cache básico y mejora de rendimiento
-const CACHE_NAME = 'heliboss-blog-v1';
+// Service Worker for caching and performance optimization
+const CACHE_NAME = 'heliboss-blog-v2';
+const STATIC_CACHE = 'static-v2';
+const DYNAMIC_CACHE = 'dynamic-v2';
+
+// Resources to cache immediately
 const STATIC_ASSETS = [
   '/',
-  '/blog/',
-  '/about/',
-  '/tags/',
+  '/blog',
+  '/tags',
+  '/about',
   '/favicon.svg',
-  '/NEGRO (2).png',
-  '/BLANCO (2).png'
+  '/manifest.json'
 ];
 
 // Install event - cache static assets
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME)
+    caches.open(STATIC_CACHE)
       .then((cache) => {
         return cache.addAll(STATIC_ASSETS);
       })
@@ -29,9 +32,11 @@ self.addEventListener('activate', (event) => {
     caches.keys()
       .then((cacheNames) => {
         return Promise.all(
-          cacheNames
-            .filter((cacheName) => cacheName !== CACHE_NAME)
-            .map((cacheName) => caches.delete(cacheName))
+          cacheNames.map((cacheName) => {
+            if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
+              return caches.delete(cacheName);
+            }
+          })
         );
       })
       .then(() => {
@@ -40,43 +45,88 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-// Fetch event - serve from cache, fallback to network
+// Fetch event - serve from cache with network fallback
 self.addEventListener('fetch', (event) => {
+  const { request } = event;
+  const url = new URL(request.url);
+
   // Skip non-GET requests
-  if (event.request.method !== 'GET') {
+  if (request.method !== 'GET') {
     return;
   }
 
   // Skip external requests
-  if (!event.request.url.startsWith(self.location.origin)) {
+  if (url.origin !== location.origin) {
     return;
   }
 
-  event.respondWith(
-    caches.match(event.request)
-      .then((response) => {
-        // Return cached version or fetch from network
-        return response || fetch(event.request)
-          .then((fetchResponse) => {
-            // Cache successful responses
-            if (fetchResponse.status === 200) {
-              const responseClone = fetchResponse.clone();
-              caches.open(CACHE_NAME)
-                .then((cache) => {
-                  cache.put(event.request, responseClone);
-                });
-            }
-            return fetchResponse;
-          })
-          .catch(() => {
-            // Return offline page for navigation requests
-            if (event.request.mode === 'navigate') {
-              return caches.match('/404/');
-            }
-          });
-      })
-  );
+  // Handle different types of requests
+  if (request.destination === 'image') {
+    event.respondWith(handleImageRequest(request));
+  } else if (url.pathname.startsWith('/blog/') || url.pathname.startsWith('/tags/')) {
+    event.respondWith(handlePageRequest(request));
+  } else {
+    event.respondWith(handleStaticRequest(request));
+  }
 });
+
+// Handle image requests with cache-first strategy
+async function handleImageRequest(request) {
+  try {
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    const networkResponse = await fetch(request);
+    if (networkResponse.ok) {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  } catch (error) {
+    // Return a fallback image if available
+    return new Response('', { status: 404 });
+  }
+}
+
+// Handle page requests with network-first strategy
+async function handlePageRequest(request) {
+  try {
+    const networkResponse = await fetch(request);
+    if (networkResponse.ok) {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  } catch (error) {
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+    // Return offline page if available
+    return caches.match('/');
+  }
+}
+
+// Handle static requests with cache-first strategy
+async function handleStaticRequest(request) {
+  try {
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) {
+      return cachedResponse;
+    }
+
+    const networkResponse = await fetch(request);
+    if (networkResponse.ok) {
+      const cache = await caches.open(STATIC_CACHE);
+      cache.put(request, networkResponse.clone());
+    }
+    return networkResponse;
+  } catch (error) {
+    return new Response('', { status: 404 });
+  }
+}
 
 // Background sync for better offline experience
 self.addEventListener('sync', (event) => {

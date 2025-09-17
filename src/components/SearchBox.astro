@@ -1,0 +1,385 @@
+---
+// SearchBox.astro - Sistema de búsqueda en tiempo real
+---
+
+<div class="search-container">
+  <div class="search-box">
+    <svg class="search-icon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+      <circle cx="11" cy="11" r="8"></circle>
+      <path d="m21 21-4.35-4.35"></path>
+    </svg>
+    <input 
+      type="text" 
+      id="search-input" 
+      placeholder="Buscar posts, tags..." 
+      class="search-input"
+      autocomplete="off"
+    />
+    <button id="clear-search" class="clear-btn" style="display: none;">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <line x1="18" y1="6" x2="6" y2="18"></line>
+        <line x1="6" y1="6" x2="18" y2="18"></line>
+      </svg>
+    </button>
+  </div>
+  
+  <div id="search-results" class="search-results" style="display: none;">
+    <div class="search-loading" id="search-loading" style="display: none;">
+      <div class="loading-spinner"></div>
+      <span>Buscando...</span>
+    </div>
+    <div id="search-content"></div>
+    <div id="no-results" class="no-results" style="display: none;">
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <circle cx="11" cy="11" r="8"></circle>
+        <path d="m21 21-4.35-4.35"></path>
+      </svg>
+      <p>No se encontraron resultados</p>
+      <small>Intenta con otros términos de búsqueda</small>
+    </div>
+  </div>
+</div>
+
+<style>
+  .search-container {
+    position: relative;
+    width: 100%;
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .search-box {
+    position: relative;
+    display: flex;
+    align-items: center;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0 16px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(10px);
+  }
+
+  .search-box:focus-within {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px var(--accent-color-alpha);
+    transform: translateY(-2px);
+  }
+
+  .search-icon {
+    color: var(--text-muted);
+    margin-right: 12px;
+    flex-shrink: 0;
+  }
+
+  .search-input {
+    flex: 1;
+    background: transparent;
+    border: none;
+    outline: none;
+    padding: 16px 0;
+    font-size: 16px;
+    color: var(--text-primary);
+    font-family: inherit;
+  }
+
+  .search-input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .clear-btn {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .clear-btn:hover {
+    color: var(--text-primary);
+    background: var(--bg-tertiary);
+  }
+
+  .search-results {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    right: 0;
+    background: var(--bg-secondary);
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    max-height: 400px;
+    overflow-y: auto;
+    z-index: 1000;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .search-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+    gap: 12px;
+    color: var(--text-muted);
+  }
+
+  .loading-spinner {
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border-color);
+    border-top: 2px solid var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+
+  .search-result-item {
+    padding: 16px;
+    border-bottom: 1px solid var(--border-color);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+  }
+
+  .search-result-item:hover {
+    background: var(--bg-tertiary);
+    transform: translateX(4px);
+  }
+
+  .search-result-item:last-child {
+    border-bottom: none;
+  }
+
+  .result-title {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 4px;
+    font-size: 16px;
+  }
+
+  .result-excerpt {
+    color: var(--text-muted);
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+  }
+
+  .result-meta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .result-tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+  }
+
+  .result-tag {
+    background: var(--accent-color-alpha);
+    color: var(--accent-color);
+    padding: 2px 8px;
+    border-radius: 12px;
+    font-size: 11px;
+    font-weight: 500;
+  }
+
+  .no-results {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+  }
+
+  .no-results svg {
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  .no-results p {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .no-results small {
+    font-size: 14px;
+    opacity: 0.7;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .search-container {
+      max-width: 100%;
+    }
+    
+    .search-results {
+      max-height: 300px;
+    }
+  }
+
+  /* Dark mode adjustments */
+  :global(.dark) .search-results {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+  }
+</style>
+
+<script>
+  // Search functionality
+  let searchTimeout;
+  let allPosts = [];
+
+  // Initialize search
+  document.addEventListener('DOMContentLoaded', async () => {
+    const searchInput = document.getElementById('search-input');
+    const searchResults = document.getElementById('search-results');
+    const searchContent = document.getElementById('search-content');
+    const searchLoading = document.getElementById('search-loading');
+    const noResults = document.getElementById('no-results');
+    const clearBtn = document.getElementById('clear-search');
+
+    // Load all posts data
+    try {
+      const response = await fetch('/api/search-data.json');
+      allPosts = await response.json();
+    } catch (error) {
+      console.error('Error loading search data:', error);
+    }
+
+    // Search input handler
+    searchInput?.addEventListener('input', (e) => {
+      const query = e.target.value.trim();
+      
+      if (query.length === 0) {
+        hideResults();
+        clearBtn.style.display = 'none';
+        return;
+      }
+
+      clearBtn.style.display = 'block';
+      showLoading();
+
+      // Debounce search
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(() => {
+        performSearch(query);
+      }, 300);
+    });
+
+    // Clear search
+    clearBtn?.addEventListener('click', () => {
+      searchInput.value = '';
+      hideResults();
+      clearBtn.style.display = 'none';
+      searchInput.focus();
+    });
+
+    // Hide results when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('.search-container')) {
+        hideResults();
+      }
+    });
+
+    function showLoading() {
+      searchResults.style.display = 'block';
+      searchLoading.style.display = 'flex';
+      searchContent.innerHTML = '';
+      noResults.style.display = 'none';
+    }
+
+    function hideResults() {
+      searchResults.style.display = 'none';
+      searchLoading.style.display = 'none';
+      noResults.style.display = 'none';
+    }
+
+    function performSearch(query) {
+      const results = searchPosts(query);
+      displayResults(results);
+    }
+
+    function searchPosts(query) {
+      const searchTerms = query.toLowerCase().split(' ').filter(term => term.length > 0);
+      
+      return allPosts.filter(post => {
+        const searchableText = [
+          post.title,
+          post.description,
+          post.content,
+          ...post.tags
+        ].join(' ').toLowerCase();
+
+        return searchTerms.every(term => searchableText.includes(term));
+      }).sort((a, b) => {
+        // Score based on title matches (higher priority)
+        const aScore = a.title.toLowerCase().includes(query.toLowerCase()) ? 2 : 0;
+        const bScore = b.title.toLowerCase().includes(query.toLowerCase()) ? 2 : 0;
+        
+        // Add score for tag matches
+        const aTagScore = a.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())) ? 1 : 0;
+        const bTagScore = b.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())) ? 1 : 0;
+        
+        return (bScore + bTagScore) - (aScore + aTagScore);
+      });
+    }
+
+    function displayResults(results) {
+      searchLoading.style.display = 'none';
+      
+      if (results.length === 0) {
+        noResults.style.display = 'block';
+        searchContent.innerHTML = '';
+        return;
+      }
+
+      noResults.style.display = 'none';
+      searchContent.innerHTML = results.slice(0, 8).map(post => `
+        <a href="/blog/${post.slug}" class="search-result-item">
+          <div class="result-title">${highlightText(post.title, searchInput.value)}</div>
+          <div class="result-excerpt">${highlightText(truncateText(post.description, 120), searchInput.value)}</div>
+          <div class="result-meta">
+            <span>${formatDate(post.pubDate)}</span>
+            <div class="result-tags">
+              ${post.tags.slice(0, 3).map(tag => `<span class="result-tag">${tag}</span>`).join('')}
+            </div>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    function highlightText(text, query) {
+      if (!query) return text;
+      const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+      return text.replace(regex, '<mark style="background: var(--accent-color-alpha); color: var(--accent-color); padding: 1px 2px; border-radius: 2px;">$1</mark>');
+    }
+
+    function truncateText(text, maxLength) {
+      if (text.length <= maxLength) return text;
+      return text.substr(0, maxLength).trim() + '...';
+    }
+
+    function formatDate(dateString) {
+      const date = new Date(dateString);
+      return date.toLocaleDateString('es-ES', { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric' 
+      });
+    }
+  });
+</script>

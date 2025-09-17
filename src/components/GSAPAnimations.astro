@@ -1,0 +1,276 @@
+---
+export interface Props {
+  selector: string;
+  animation?: 'fadeInUp' | 'slideInLeft' | 'typewriter' | 'bounce' | 'glow' | 'wave';
+  duration?: number;
+  delay?: number;
+  stagger?: number;
+  scrollTrigger?: boolean;
+  hover?: boolean;
+}
+
+const { 
+  selector, 
+  animation = 'fadeInUp', 
+  duration = 1, 
+  delay = 0, 
+  stagger = 0,
+  scrollTrigger = true,
+  hover = false
+} = Astro.props;
+---
+
+<script define:vars={{ selector, animation, duration, delay, stagger, scrollTrigger, hover }}>
+  // Performance optimization: Only load GSAP when needed
+  if (typeof window !== 'undefined') {
+    // Check if elements exist before loading GSAP
+    const elements = document.querySelectorAll(selector);
+    if (elements.length === 0) return;
+
+    // Lazy load GSAP only when elements are found
+    const loadGSAP = async () => {
+      try {
+        const { gsap } = await import('https://cdn.skypack.dev/gsap@3.12.2');
+        const { ScrollTrigger } = await import('https://cdn.skypack.dev/gsap@3.12.2/ScrollTrigger');
+        
+        // Register ScrollTrigger plugin
+        gsap.registerPlugin(ScrollTrigger);
+
+        // Performance: Use will-change CSS property for better rendering
+        gsap.set(elements, { willChange: 'transform, opacity' });
+
+        // Predefined animations with optimized settings
+        const animations = {
+          fadeInUp: () => {
+            gsap.fromTo(elements, 
+              { opacity: 0, y: 30, scale: 0.95 },
+              { 
+                opacity: 1, 
+                y: 0, 
+                scale: 1,
+                duration,
+                delay,
+                stagger,
+                ease: "power2.out",
+                force3D: true, // Hardware acceleration
+                scrollTrigger: scrollTrigger ? {
+                  trigger: elements[0],
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true // Performance: only animate once
+                } : false
+              }
+            );
+          },
+          
+          slideInLeft: () => {
+            gsap.fromTo(elements,
+              { opacity: 0, x: -50, rotationY: -15 },
+              {
+                opacity: 1,
+                x: 0,
+                rotationY: 0,
+                duration,
+                delay,
+                stagger,
+                ease: "back.out(1.7)",
+                force3D: true,
+                scrollTrigger: scrollTrigger ? {
+                  trigger: elements[0],
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                } : false
+              }
+            );
+          },
+
+          typewriter: () => {
+            elements.forEach((element, index) => {
+              const text = element.textContent;
+              element.textContent = '';
+              
+              gsap.to({}, {
+                duration: duration,
+                delay: delay + (stagger * index),
+                ease: "none",
+                onUpdate: function() {
+                  const progress = this.progress();
+                  const currentLength = Math.round(progress * text.length);
+                  element.textContent = text.substring(0, currentLength);
+                },
+                scrollTrigger: scrollTrigger ? {
+                  trigger: element,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                } : false
+              });
+            });
+          },
+
+          bounce: () => {
+            gsap.fromTo(elements,
+              { opacity: 0, y: -20, scale: 0.8 },
+              {
+                opacity: 1,
+                y: 0,
+                scale: 1,
+                duration,
+                delay,
+                stagger,
+                ease: "bounce.out",
+                force3D: true,
+                scrollTrigger: scrollTrigger ? {
+                  trigger: elements[0],
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                } : false
+              }
+            );
+          },
+
+          glow: () => {
+            gsap.fromTo(elements,
+              { 
+                opacity: 0, 
+                scale: 0.9,
+                filter: "brightness(0.5) saturate(0.5)"
+              },
+              {
+                opacity: 1,
+                scale: 1,
+                filter: "brightness(1) saturate(1)",
+                duration,
+                delay,
+                stagger,
+                ease: "power2.out",
+                force3D: true,
+                scrollTrigger: scrollTrigger ? {
+                  trigger: elements[0],
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                } : false,
+                onComplete: () => {
+                  // Add subtle glow effect
+                  gsap.to(elements, {
+                    textShadow: "0 0 10px currentColor",
+                    duration: 0.5,
+                    yoyo: true,
+                    repeat: 1,
+                    ease: "power2.inOut"
+                  });
+                }
+              }
+            );
+          },
+
+          wave: () => {
+            elements.forEach((element, index) => {
+              const chars = element.textContent.split('');
+              element.innerHTML = chars.map(char => 
+                char === ' ' ? ' ' : `<span style="display:inline-block;">${char}</span>`
+              ).join('');
+              
+              const charElements = element.querySelectorAll('span');
+              
+              gsap.fromTo(charElements,
+                { opacity: 0, y: 20, rotationX: -90 },
+                {
+                  opacity: 1,
+                  y: 0,
+                  rotationX: 0,
+                  duration: 0.6,
+                  delay: delay + (stagger * index),
+                  stagger: 0.05,
+                  ease: "back.out(1.7)",
+                  force3D: true,
+                  scrollTrigger: scrollTrigger ? {
+                    trigger: element,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse",
+                    once: true
+                  } : false
+                }
+              );
+            });
+          }
+        };
+
+        // Execute animation
+        if (animations[animation]) {
+          animations[animation]();
+        }
+
+        // Add hover effects if enabled
+        if (hover) {
+          elements.forEach(element => {
+            element.addEventListener('mouseenter', () => {
+              gsap.to(element, {
+                scale: 1.05,
+                duration: 0.3,
+                ease: "power2.out",
+                force3D: true
+              });
+            });
+            
+            element.addEventListener('mouseleave', () => {
+              gsap.to(element, {
+                scale: 1,
+                duration: 0.3,
+                ease: "power2.out",
+                force3D: true
+              });
+            });
+          });
+        }
+
+        // Clean up will-change after animation completes
+        gsap.delayedCall(duration + delay + (stagger * elements.length) + 1, () => {
+          gsap.set(elements, { willChange: 'auto' });
+        });
+
+      } catch (error) {
+        console.warn('GSAP failed to load:', error);
+      }
+    };
+
+    // Use Intersection Observer for better performance
+    if ('IntersectionObserver' in window && scrollTrigger) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            loadGSAP();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      elements.forEach(element => observer.observe(element));
+    } else {
+      // Fallback: load immediately if no Intersection Observer
+      loadGSAP();
+    }
+  }
+</script>
+
+<style>
+  /* Performance optimizations */
+  :global(.gsap-span) {
+    transform: translateZ(0); /* Force hardware acceleration */
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Reduce layout thrashing */
+  :global(.gsap-span *) {
+    transform: translateZ(0);
+  }
+  
+  /* Optimize for animations */
+  :global(.gsap-span) {
+    contain: layout style paint;
+  }
+</style>

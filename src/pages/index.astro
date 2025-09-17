@@ -2,6 +2,8 @@
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 import FormattedDate from '../components/FormattedDate.astro';
+import GSAPAnimations from '../components/GSAPAnimations.astro';
+import AbstractTitleAnimation from '../components/AbstractTitleAnimation.astro';
 
 // Get all blog posts
 const allPosts = await getCollection('blog');
@@ -25,18 +27,34 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
       <div class="absolute -bottom-10 sm:-bottom-20 -right-10 sm:-right-20 w-40 sm:w-64 h-40 sm:h-64 bg-zinc-200 dark:bg-zinc-800/30 rounded-full blur-3xl opacity-30 animate-blob animation-delay-2000 theme-transition-bg"></div>
       
       <div class="relative text-center sm:text-left">
-        <h1 class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 theme-transition-color hero-text">
-          <span id="hero-span-1" class="block">Conoce lo último de</span>
-          <span id="hero-span-2" class="block mt-1">tecnología DJI</span>
-          <span id="hero-span-3" class="block mt-1 relative">
-            <span class="relative inline-block">
-              y drones profesionales.
-              <span class="absolute -bottom-1 left-0 w-full h-1 bg-zinc-800 dark:bg-zinc-200 transform origin-left theme-transition-bg"></span>
-            </span>
-          </span>
-        </h1>
+        <div class="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-zinc-900 dark:text-zinc-100 theme-transition-color hero-text">
+          <AbstractTitleAnimation 
+            text="Conoce lo último de"
+            className="block"
+            animationType="cylinder"
+            duration={1.2}
+            delay={0.2}
+            splitBy="chars"
+          />
+          <AbstractTitleAnimation 
+            text="tecnología DJI y drones"
+            className="block mt-1"
+            animationType="cylinder"
+            duration={1.2}
+            delay={0.6}
+            splitBy="chars"
+          />
+          <AbstractTitleAnimation 
+            text="profesionales"
+            className="block mt-1"
+            animationType="cylinder"
+            duration={1.2}
+            delay={1.0}
+            splitBy="chars"
+          />
+        </div>
         <p class="mt-4 sm:mt-6 md:mt-8 text-base sm:text-lg text-zinc-600 dark:text-zinc-400 leading-relaxed theme-transition-color max-w-lg mx-auto sm:mx-0">
-          <span class="text-green-600 dark:text-green-400 font-semibold text-lg">DEALER OFICIAL DE DRONES DJI ENTERPRISE EN CHILE</span>
+          <span class="gsap-span dealer-span text-green-600 dark:text-green-400 font-semibold text-lg">DEALER OFICIAL DE DRONES DJI ENTERPRISE EN CHILE</span>
         </p>
         <div class="mt-6 sm:mt-8 md:mt-10 flex flex-wrap gap-3 sm:gap-4 md:gap-6 justify-center sm:justify-start">
           <a 
@@ -98,7 +116,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
               <time datetime={post.data.pubDate.toISOString()} class="font-medium">
                 <FormattedDate date={post.data.pubDate} format="long" />
               </time>
-              <span class="relative z-10 rounded-full bg-zinc-100 dark:bg-zinc-800 px-2 sm:px-3 py-1 sm:py-1.5 font-medium text-zinc-600 dark:text-zinc-300 theme-transition-all">
+              <span class="gsap-span reading-time-span relative z-10 rounded-full bg-zinc-100 dark:bg-zinc-800 px-2 sm:px-3 py-1 sm:py-1.5 font-medium text-zinc-600 dark:text-zinc-300 theme-transition-all">
                 {post.data.readingTime || `${Math.ceil(post.body.length / 2000)} min de lectura`}
               </span>
             </div>
@@ -121,11 +139,11 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
                     href={`/tags/${tag}`}
                     class="inline-flex items-center rounded-lg bg-zinc-100 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-xs sm:text-sm font-medium text-zinc-800 hover:bg-zinc-200 dark:bg-zinc-800 dark:text-zinc-100 dark:hover:bg-zinc-700 transition-all duration-300 min-h-[28px] sm:min-h-[32px] shadow-sm hover:shadow-md hover:scale-105 active:scale-95 theme-transition-all whitespace-nowrap"
                   >
-                    <span class="mr-1 text-zinc-500 dark:text-zinc-400">#</span>{tag}
+                    <span class="gsap-span tag-hash-span mr-1 text-zinc-500 dark:text-zinc-400">#</span>{tag}
                   </a>
                 ))}
                 {post.data.tags.length > 3 && (
-                  <span class="inline-flex items-center rounded-full bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-500 dark:bg-zinc-800/50 dark:text-zinc-400 theme-transition-all min-h-[28px]">
+                  <span class="gsap-span more-tags-span inline-flex items-center rounded-full bg-zinc-50 px-2 py-1 text-xs font-medium text-zinc-500 dark:bg-zinc-800/50 dark:text-zinc-400 theme-transition-all min-h-[28px]">
                     +{post.data.tags.length - 3} más
                   </span>
                 )}
@@ -178,6 +196,15 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
       </div>
     </div>
   </section>
+
+  <!-- GSAP Animation Components -->
+  <GSAPAnimations selector=".hero-span-1" animation="fadeInUp" duration={1.2} delay={0.2} />
+  <GSAPAnimations selector=".hero-span-2" animation="slideInLeft" duration={1.4} delay={0.6} />
+  <GSAPAnimations selector=".hero-span-3" animation="bounce" duration={1.6} delay={1.0} />
+  <GSAPAnimations selector=".dealer-span" animation="glow" duration={2.0} delay={1.4} />
+  <GSAPAnimations selector=".reading-time-span" animation="wave" duration={0.8} stagger={0.2} />
+  <GSAPAnimations selector=".tag-hash-span" animation="bounce" duration={0.6} stagger={0.1} />
+  <GSAPAnimations selector=".more-tags-span" animation="fadeInUp" duration={0.8} delay={0.3} />
 </Layout>
 
 <script>

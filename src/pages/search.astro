@@ -1,0 +1,111 @@
+---
+import Layout from '../layouts/Layout.astro';
+import SearchBox from '../components/SearchBox.astro';
+import { getCollection } from 'astro:content';
+
+const allPosts = await getCollection('blog');
+const recentPosts = allPosts
+  .sort((a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf())
+  .slice(0, 6);
+
+const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
+---
+
+<Layout title="Búsqueda - Heliboss Blog" description="Busca posts, temas y contenido en el blog de Heliboss">
+  <main class="max-w-4xl mx-auto px-4 py-8">
+    <!-- Hero Section -->
+    <div class="text-center mb-12">
+      <h1 class="text-4xl md:text-5xl font-bold text-zinc-900 dark:text-white mb-4">
+        Buscar en el Blog
+      </h1>
+      <p class="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
+        Encuentra posts, temas y contenido específico usando nuestra búsqueda inteligente
+      </p>
+    </div>
+
+    <!-- Search Box -->
+    <div class="mb-12">
+      <SearchBox />
+    </div>
+
+    <!-- Popular Tags -->
+    <section class="mb-12">
+      <h2 class="text-2xl font-bold text-zinc-900 dark:text-white mb-6">
+        Temas Populares
+      </h2>
+      <div class="flex flex-wrap gap-3">
+        {allTags.slice(0, 12).map(tag => (
+          <a 
+            href={`/tags/${tag}`}
+            class="inline-flex items-center px-4 py-2 bg-zinc-100 dark:bg-zinc-800 text-zinc-700 dark:text-zinc-300 rounded-full hover:bg-zinc-200 dark:hover:bg-zinc-700 transition-colors duration-200 text-sm font-medium"
+          >
+            #{tag}
+          </a>
+        ))}
+      </div>
+    </section>
+
+    <!-- Recent Posts -->
+    <section>
+      <h2 class="text-2xl font-bold text-zinc-900 dark:text-white mb-6">
+        Posts Recientes
+      </h2>
+      <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        {recentPosts.map(post => (
+          <article class="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden hover:shadow-lg transition-shadow duration-200">
+            {post.data.heroImage && (
+              <img 
+                src={post.data.heroImage} 
+                alt={post.data.title}
+                class="w-full h-48 object-cover"
+                loading="lazy"
+              />
+            )}
+            <div class="p-6">
+              <h3 class="font-bold text-lg text-zinc-900 dark:text-white mb-2 line-clamp-2">
+                <a href={`/blog/${post.slug}`} class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors">
+                  {post.data.title}
+                </a>
+              </h3>
+              <p class="text-zinc-600 dark:text-zinc-400 text-sm mb-4 line-clamp-3">
+                {post.data.description}
+              </p>
+              <div class="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-500">
+                <time datetime={post.data.pubDate.toISOString()}>
+                  {post.data.pubDate.toLocaleDateString('es-ES', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric'
+                  })}
+                </time>
+                <div class="flex gap-2">
+                  {post.data.tags?.slice(0, 2).map(tag => (
+                    <span class="bg-zinc-100 dark:bg-zinc-700 px-2 py-1 rounded text-xs">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </article>
+        ))}
+      </div>
+    </section>
+  </main>
+</Layout>
+
+<style>
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  
+  .line-clamp-3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+</style>

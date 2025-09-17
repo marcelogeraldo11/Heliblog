@@ -1,9 +1,10 @@
 ---
-import { ViewTransitions } from 'astro:transitions';
+import ViewTransitions from 'astro:transitions';
 import Navigation from '../components/Navigation.astro';
 import Footer from '../components/Footer.astro';
 import Background from '../components/Background.astro';
 import BrowserCompatibility from '../components/BrowserCompatibility.astro';
+import CriticalCSS from '../components/CriticalCSS.astro';
 import '../styles/global.css';
 
 export interface Props {
@@ -17,30 +18,38 @@ const { title, description = "Blog profesional sobre tecnología de drones, sist
 <!DOCTYPE html>
 <html lang="es">
   <head>
+    <CriticalCSS />
     <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="generator" content={Astro.generator} />
     <meta name="description" content={description} />
     <meta name="robots" content="index, follow" />
-    <meta name="author" content="Heliboss Blog" />
-    <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
-    <meta name="theme-color" content="#0f0f23" media="(prefers-color-scheme: dark)" />
-    <meta name="keywords" content="drones, DJI, tecnología, blog profesional, sistemas aéreos" />
+    <meta name="author" content="Heliboss" />
+    <meta name="theme-color" content="#18181b" />
+    <meta name="keywords" content="drones, DJI, tecnología, Chile, Heliboss" />
     <meta name="language" content="es" />
     <meta name="geo.region" content="CL" />
     <meta name="geo.country" content="Chile" />
     
     <!-- Performance optimizations -->
-    <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin />
-    <link rel="preload" href="/fonts/inter.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" /></noscript>
     
     <!-- Critical CSS inlined -->
     <style>
       /* Critical above-the-fold styles */
-      body { font-family: system-ui, -apple-system, sans-serif; }
+      body { 
+        font-family: 'Inter', system-ui, -apple-system, sans-serif; 
+        font-display: swap;
+      }
       .hero-section { min-height: 50vh; }
+      /* Prevent layout shift */
+      img { height: auto; }
+      .loading { opacity: 0; transition: opacity 0.3s ease; }
+      .loaded { opacity: 1; }
     </style>
     
     <!-- Open Graph / Facebook -->
@@ -65,38 +74,71 @@ const { title, description = "Blog profesional sobre tecnología de drones, sist
     
     <title>{title}</title>
     <!-- Preload critical resources -->
-    <link rel="preload" href="/favicon.svg" as="image" type="image/svg+xml">
-    
-    <!-- Font optimization -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="/favicon.svg" as="image" type="image/svg+xml" />
     
     <!-- DNS prefetch for external resources -->
-    <link rel="dns-prefetch" href="https://fonts.googleapis.com">
-    <link rel="dns-prefetch" href="https://fonts.gstatic.com">
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    <link rel="dns-prefetch" href="https://fonts.gstatic.com" />
     
     <!-- Datos estructurados para la organización -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@type": "Organization",
-      "name": "Heliboss",
-      "url": "https://heliboss.cl",
-      "logo": "https://heliboss.cl/NEGRO (2).png",
-      "description": "Dealer oficial de drones DJI Enterprise en Chile",
-      "address": {
-        "@type": "PostalAddress",
-        "addressCountry": "CL",
-        "addressRegion": "Chile"
-      },
-      "areaServed": "Chile",
-      "brand": "DJI",
-      "serviceType": "Venta y soporte de drones DJI Enterprise",
+      "name": "Heliboss Blog",
+      "url": "https://heliblog.netlify.app",
+      "logo": "https://heliblog.netlify.app/favicon.svg",
+      "description": "Blog personal sobre desarrollo web, tecnología y programación",
       "sameAs": [
-        "https://www.heliboss.cl"
+        "https://github.com/heliboss",
+        "https://twitter.com/heliboss"
       ]
     }
+    </script>
+
+    <!-- Service Worker Registration -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+
+    <!-- Performance Monitoring -->
+    <script>
+      // Core Web Vitals monitoring
+      if ('PerformanceObserver' in window) {
+        const observer = new PerformanceObserver((list) => {
+          list.getEntries().forEach((entry) => {
+            switch (entry.entryType) {
+              case 'largest-contentful-paint':
+                console.log('LCP:', entry.startTime);
+                break;
+              case 'first-input':
+                console.log('FID:', entry.processingStart - entry.startTime);
+                break;
+              case 'layout-shift':
+                if (!entry.hadRecentInput) {
+                  console.log('CLS:', entry.value);
+                }
+                break;
+            }
+          });
+        });
+
+        try {
+          observer.observe({ entryTypes: ['largest-contentful-paint', 'first-input', 'layout-shift'] });
+        } catch (e) {
+          console.log('Performance monitoring not fully supported');
+        }
+      }
     </script>
   </head>
   <body class="bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-100 min-h-screen flex flex-col">

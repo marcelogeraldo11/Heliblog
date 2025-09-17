@@ -1,0 +1,418 @@
+---
+export interface Props {
+  text: string;
+  className?: string;
+  duration?: number;
+  delay?: number;
+  splitBy?: 'chars' | 'words' | 'lines';
+  animationType?: 'fadeInUp' | 'slideInLeft' | 'scramble' | 'typewriter' | 'cylinder' | 'wave';
+}
+
+const { 
+  text,
+  className = '',
+  duration = 1.2,
+  delay = 0,
+  splitBy = 'chars',
+  animationType = 'cylinder'
+} = Astro.props;
+
+// Generate unique ID for this instance
+const uniqueId = `abstract-title-${Math.random().toString(36).substr(2, 9)}`;
+---
+
+<div class={`abstract-title-container ${className}`} data-text={text} id={uniqueId}>
+  <span class="abstract-title-text">{text}</span>
+</div>
+
+<script define:vars={{ uniqueId, text, duration, delay, splitBy, animationType }}>
+  if (typeof window !== 'undefined') {
+    const loadAbstractAnimation = async () => {
+      try {
+        const { gsap } = await import('https://cdn.skypack.dev/gsap@3.12.2');
+        const { ScrollTrigger } = await import('https://cdn.skypack.dev/gsap@3.12.2/ScrollTrigger');
+        
+        gsap.registerPlugin(ScrollTrigger);
+
+        const container = document.getElementById(uniqueId);
+        const textElement = container.querySelector('.abstract-title-text');
+        
+        if (!container || !textElement) return;
+
+        // Split text function
+        const splitText = (element, type) => {
+          const text = element.textContent;
+          let splitArray = [];
+          
+          switch(type) {
+            case 'chars':
+              splitArray = text.split('');
+              break;
+            case 'words':
+              splitArray = text.split(' ');
+              break;
+            case 'lines':
+              splitArray = text.split('\n');
+              break;
+            default:
+              splitArray = text.split('');
+          }
+          
+          element.innerHTML = splitArray.map((item, index) => {
+            if (item === ' ') return ' ';
+            return `<span class="split-item" data-index="${index}" style="display: inline-block;">${item}</span>`;
+          }).join('');
+          
+          return element.querySelectorAll('.split-item');
+        };
+
+        // Split the text
+        const splitElements = splitText(textElement, splitBy);
+        
+        // Set initial styles for performance
+        gsap.set(splitElements, { willChange: 'transform, opacity' });
+
+        // Animation configurations
+        const animations = {
+          fadeInUp: () => {
+            gsap.fromTo(splitElements, 
+              { 
+                opacity: 0, 
+                y: 50,
+                scale: 0.8,
+                filter: 'blur(10px)'
+              },
+              { 
+                opacity: 1, 
+                y: 0,
+                scale: 1,
+                filter: 'blur(0px)',
+                duration,
+                delay,
+                stagger: 0.05,
+                ease: "power3.out",
+                force3D: true,
+                scrollTrigger: {
+                  trigger: container,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                }
+              }
+            );
+          },
+
+          slideInLeft: () => {
+            gsap.fromTo(splitElements,
+              { 
+                opacity: 0, 
+                x: -100, 
+                rotationY: -90,
+                transformOrigin: "center center -50px"
+              },
+              {
+                opacity: 1,
+                x: 0,
+                rotationY: 0,
+                duration,
+                delay,
+                stagger: 0.03,
+                ease: "back.out(1.7)",
+                force3D: true,
+                scrollTrigger: {
+                  trigger: container,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                }
+              }
+            );
+          },
+
+          cylinder: () => {
+            // This is the Abstract.cl style effect - cylinder rotation with enhanced performance
+            gsap.set(splitElements, {
+              transformOrigin: "center center -100px",
+              rotationX: -90,
+              opacity: 0,
+              z: -50
+            });
+
+            const tl = gsap.timeline({
+              scrollTrigger: {
+                trigger: container,
+                start: "top 85%",
+                toggleActions: "play none none reverse",
+                once: true
+              }
+            });
+
+            tl.to(splitElements, {
+              rotationX: 0,
+              opacity: 1,
+              z: 0,
+              duration,
+              stagger: {
+                amount: 0.6,
+                from: "start",
+                ease: "power2.inOut"
+              },
+              ease: "power3.out",
+              force3D: true
+            })
+            .to(splitElements, {
+              rotationX: 5,
+              duration: 0.3,
+              stagger: {
+                amount: 0.2,
+                from: "start"
+              },
+              ease: "power2.out",
+              force3D: true
+            }, "-=0.2")
+            .to(splitElements, {
+              rotationX: 0,
+              duration: 0.4,
+              stagger: {
+                amount: 0.15,
+                from: "start"
+              },
+              ease: "elastic.out(1, 0.3)",
+              force3D: true
+            }, "-=0.1");
+          },
+
+          scramble: () => {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+            
+            splitElements.forEach((element, index) => {
+              const originalChar = element.textContent;
+              const scrambleCount = 8;
+              
+              // Initial scramble
+              gsap.to({}, {
+                duration: duration * 0.7,
+                delay: delay + (index * 0.02),
+                ease: "none",
+                onUpdate: function() {
+                  const progress = this.progress();
+                  if (progress < 1) {
+                    element.textContent = chars[Math.floor(Math.random() * chars.length)];
+                  } else {
+                    element.textContent = originalChar;
+                  }
+                },
+                scrollTrigger: {
+                  trigger: container,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                }
+              });
+
+              // Fade in effect
+              gsap.fromTo(element, 
+                { opacity: 0 },
+                { 
+                  opacity: 1, 
+                  duration: 0.1,
+                  delay: delay + (index * 0.02),
+                  scrollTrigger: {
+                    trigger: container,
+                    start: "top 85%",
+                    toggleActions: "play none none reverse",
+                    once: true
+                  }
+                }
+              );
+            });
+          },
+
+          typewriter: () => {
+            // Hide all characters initially
+            gsap.set(splitElements, { opacity: 0 });
+            
+            // Reveal characters one by one
+            splitElements.forEach((element, index) => {
+              gsap.to(element, {
+                opacity: 1,
+                duration: 0.05,
+                delay: delay + (index * 0.08),
+                ease: "none",
+                scrollTrigger: {
+                  trigger: container,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                }
+              });
+            });
+
+            // Add cursor effect to the last character
+            const lastElement = splitElements[splitElements.length - 1];
+            if (lastElement) {
+              gsap.to(lastElement, {
+                borderRight: "2px solid currentColor",
+                duration: 0,
+                delay: delay + (splitElements.length * 0.08),
+                scrollTrigger: {
+                  trigger: container,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                }
+              });
+
+              // Blinking cursor
+              gsap.to(lastElement, {
+                borderRightColor: "transparent",
+                duration: 0.5,
+                repeat: -1,
+                yoyo: true,
+                delay: delay + (splitElements.length * 0.08) + 0.5,
+                scrollTrigger: {
+                  trigger: container,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                }
+              });
+            }
+          },
+
+          wave: () => {
+            gsap.fromTo(splitElements,
+              { 
+                opacity: 0, 
+                y: 30, 
+                rotationX: -90,
+                transformOrigin: "center bottom"
+              },
+              {
+                opacity: 1,
+                y: 0,
+                rotationX: 0,
+                duration: 0.8,
+                delay,
+                stagger: 0.03,
+                ease: "elastic.out(1, 0.3)",
+                force3D: true,
+                scrollTrigger: {
+                  trigger: container,
+                  start: "top 85%",
+                  toggleActions: "play none none reverse",
+                  once: true
+                }
+              }
+            );
+          }
+        };
+
+        // Execute the selected animation
+        if (animations[animationType]) {
+          animations[animationType]();
+        }
+
+        // Add hover effect for interactivity (optimized)
+        let hoverTween = null;
+        
+        container.addEventListener('mouseenter', () => {
+          if (hoverTween) hoverTween.kill();
+          hoverTween = gsap.to(splitElements, {
+            scale: 1.02,
+            rotationY: 2,
+            duration: 0.4,
+            stagger: {
+              amount: 0.1,
+              from: "center"
+            },
+            ease: "power2.out",
+            force3D: true
+          });
+        });
+
+        container.addEventListener('mouseleave', () => {
+          if (hoverTween) hoverTween.kill();
+          hoverTween = gsap.to(splitElements, {
+            scale: 1,
+            rotationY: 0,
+            duration: 0.4,
+            stagger: {
+              amount: 0.1,
+              from: "center"
+            },
+            ease: "power2.out",
+            force3D: true
+          });
+        });
+
+        // Clean up will-change after animation
+        gsap.delayedCall(duration + delay + (splitElements.length * 0.05) + 1, () => {
+          gsap.set(splitElements, { willChange: 'auto' });
+        });
+
+      } catch (error) {
+        console.warn('Abstract animation failed to load:', error);
+      }
+    };
+
+    // Use Intersection Observer for performance
+    if ('IntersectionObserver' in window) {
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            loadAbstractAnimation();
+            observer.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.1 });
+
+      const container = document.getElementById(uniqueId);
+      if (container) observer.observe(container);
+    } else {
+      loadAbstractAnimation();
+    }
+  }
+</script>
+
+<style>
+  .abstract-title-container {
+    perspective: 1000px;
+    overflow: hidden;
+  }
+
+  .abstract-title-text {
+    display: inline-block;
+    font-weight: bold;
+    line-height: 1.2;
+  }
+
+  :global(.split-item) {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+    display: inline-block;
+    transform-style: preserve-3d;
+  }
+
+  /* Performance optimizations */
+  .abstract-title-container {
+    contain: layout style paint;
+    will-change: transform;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .abstract-title-container {
+      perspective: 500px;
+    }
+  }
+
+  /* Accessibility - Respect reduced motion preference */
+  @media (prefers-reduced-motion: reduce) {
+    :global(.split-item) {
+      animation: none !important;
+      transition: none !important;
+    }
+  }
+</style>

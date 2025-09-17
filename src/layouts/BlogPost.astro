@@ -4,6 +4,8 @@ import FormattedDate from '../components/FormattedDate.astro';
 import ShareButtons from '../components/ShareButtons.astro';
 import TagList from '../components/TagList.astro';
 import ResponsiveImage from '../components/ResponsiveImage.astro';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
+import ReadingMode from '../components/ReadingMode.astro';
 import { Image } from 'astro:assets';
 import './styles/markdown.css';
 export interface Props {
@@ -107,37 +109,16 @@ const jsonLD = {
   <meta name="twitter:card" content="summary_large_image" slot="head" />
   <meta name="twitter:image" content={heroImageUrl || `${Astro.site || 'https://heliboss.cl'}/placeholder.jpg`} slot="head" />
   <meta name="twitter:image:alt" content={title} slot="head" />
-  <!-- Breadcrumbs estructurados -->
-  <nav aria-label="Breadcrumb" class="mb-8">
-    <ol itemscope itemtype="https://schema.org/BreadcrumbList" class="flex items-center space-x-2 text-sm text-zinc-600 dark:text-zinc-400">
-      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="/" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
-          <span itemprop="name">Inicio</span>
-        </a>
-        <meta itemprop="position" content="1" />
-      </li>
-      <li class="flex items-center">
-        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-        </svg>
-      </li>
-      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <a itemprop="item" href="/blog" class="hover:text-zinc-900 dark:hover:text-zinc-100 transition-colors">
-          <span itemprop="name">Blog</span>
-        </a>
-        <meta itemprop="position" content="2" />
-      </li>
-      <li class="flex items-center">
-        <svg class="w-4 h-4 mx-2" fill="currentColor" viewBox="0 0 20 20">
-          <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
-        </svg>
-      </li>
-      <li itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
-        <span itemprop="name" class="text-zinc-900 dark:text-zinc-100 font-medium">{title}</span>
-        <meta itemprop="position" content="3" />
-      </li>
-    </ol>
-  </nav>
+  
+  <!-- Breadcrumbs -->
+  <div class="max-w-4xl mx-auto px-4">
+    <Breadcrumbs 
+      items={[
+        { label: 'Blog', href: '/blog' },
+        { label: title, current: true }
+      ]}
+    />
+  </div>
 
   <article class="prose dark:prose-invert prose-zinc lg:prose-lg mx-auto max-w-4xl">
     <div class="mb-12">
@@ -190,6 +171,15 @@ const jsonLD = {
   </article>
   
   <slot name="after-article" />
+  
+  <!-- Reading Mode Component -->
+  <ReadingMode 
+    title={title}
+    content={await Astro.slots.render('default')}
+    publishDate={pubDate}
+    readingTime={readingTime}
+    tags={tags}
+  />
 </Layout>
 
 <script>

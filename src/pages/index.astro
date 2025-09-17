@@ -108,6 +108,7 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
                   width="400"
                   height="225"
                   fetchpriority={index === 0 ? "high" : "auto"}
+                  style="content-visibility: auto; contain-intrinsic-size: 400px 225px;"
                 />
               </div>
             )}

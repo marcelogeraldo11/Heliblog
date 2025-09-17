@@ -78,12 +78,18 @@ export default defineConfig({
       },
       cssCodeSplit: true,
       minify: 'esbuild',
-      // Configuración para mejor compresión
+      // Configuración para mejor compresión y rendimiento
       target: 'es2020',
       sourcemap: false,
+      chunkSizeWarningLimit: 1000,
+      assetsInlineLimit: 4096,
     },
     optimizeDeps: {
       include: ['react', 'react-dom'],
+    },
+    // Configuración adicional para rendimiento
+    ssr: {
+      noExternal: ['react-icons'],
     },
   },
   build: {

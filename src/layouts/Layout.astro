@@ -32,27 +32,29 @@ const { title, description = "Blog profesional sobre tecnología de drones, sist
     <meta name="geo.region" content="CL" />
     <meta name="geo.country" content="Chile" />
     
-    <!-- Performance optimizations -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <!-- Performance optimizations - Enhanced for LCP -->
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    
+    <!-- Preload critical images with high priority -->
+    <link rel="preload" href="/NEGRO-optimized.webp" as="image" type="image/webp" fetchpriority="high" />
+    
+    <!-- Font loading optimization -->
     <link rel="preload" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'" />
     <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" /></noscript>
     
-    <!-- Preload critical images -->
-    <link rel="preload" href="/NEGRO-optimized.webp" as="image" type="image/webp" fetchpriority="high" />
+    <!-- Resource hints for better performance -->
+    <link rel="prefetch" href="/api/posts" />
+    <link rel="modulepreload" href="/_astro/client.js" />
     
-    <!-- Critical CSS inlined -->
+    <!-- Critical CSS inlined - Optimized for performance -->
     <style>
-      /* Critical above-the-fold styles */
-      body { 
-        font-family: 'Inter', system-ui, -apple-system, sans-serif; 
-        font-display: swap;
-      }
-      .hero-section { min-height: 50vh; }
-      /* Prevent layout shift */
-      img { height: auto; }
-      .loading { opacity: 0; transition: opacity 0.3s ease; }
-      .loaded { opacity: 1; }
+      /* Minimal critical styles for immediate rendering */
+      body{font-family:'Inter',system-ui,sans-serif;font-display:swap}
+      .hero-section{min-height:50vh}
+      img{height:auto;content-visibility:auto}
+      .loading{opacity:0;transition:opacity .3s}
+      .loaded{opacity:1}
     </style>
     
     <!-- Open Graph / Facebook -->
@@ -141,6 +143,22 @@ const { title, description = "Blog profesional sobre tecnología de drones, sist
         } catch (e) {
           console.log('Performance monitoring not fully supported');
         }
+      }
+    </script>
+    <!-- Performance optimizations script -->
+    <script>
+      // Initialize performance optimizations
+      import { preloadCriticalResources, optimizeImages } from '../utils/performance.js';
+      
+      // Run optimizations as early as possible
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', () => {
+          preloadCriticalResources();
+          optimizeImages();
+        });
+      } else {
+        preloadCriticalResources();
+        optimizeImages();
       }
     </script>
   </head>

@@ -27,6 +27,32 @@ export function throttle(func, limit) {
   };
 }
 
+// Preload critical resources for better LCP
+export function preloadCriticalResources() {
+  // Preload critical fonts
+  const fontLink = document.createElement('link');
+  fontLink.rel = 'preload';
+  fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap';
+  fontLink.as = 'style';
+  fontLink.onload = function() {
+    this.onload = null;
+    this.rel = 'stylesheet';
+  };
+  document.head.appendChild(fontLink);
+}
+
+// Optimize images with content-visibility
+export function optimizeImages() {
+  document.querySelectorAll('img').forEach(img => {
+    if (!img.style.contentVisibility) {
+      img.style.contentVisibility = 'auto';
+      if (img.width && img.height) {
+        img.style.containIntrinsicSize = `${img.width}px ${img.height}px`;
+      }
+    }
+  });
+}
+
 // Optimized scheduler for breaking up long tasks
 export function scheduleWork(tasks, options = {}) {
   const { timeSlice = 5, deadline = 16 } = options;

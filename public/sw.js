@@ -10,7 +10,8 @@ const STATIC_ASSETS = [
   '/tags',
   '/about',
   '/favicon.svg',
-  '/manifest.json'
+  '/manifest.json',
+  '/offline.html'
 ];
 
 // Install event - cache static assets
@@ -29,19 +30,21 @@ self.addEventListener('install', (event) => {
 // Activate event - clean up old caches
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys()
-      .then((cacheNames) => {
-        return Promise.all(
-          cacheNames.map((cacheName) => {
-            if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
-              return caches.delete(cacheName);
-            }
-          })
-        );
-      })
-      .then(() => {
-        return self.clients.claim();
-      })
+    (async () => {
+      const cacheNames = await caches.keys();
+      await Promise.all(
+        cacheNames.map((cacheName) => {
+          if (cacheName !== STATIC_CACHE && cacheName !== DYNAMIC_CACHE) {
+            return caches.delete(cacheName);
+          }
+        })
+      );
+      // Enable navigation preload if supported
+      if ('navigationPreload' in self.registration) {
+        try { await self.registration.navigationPreload.enable(); } catch {}
+      }
+      await self.clients.claim();
+    })()
   );
 });
 
@@ -57,6 +60,12 @@ self.addEventListener('fetch', (event) => {
 
   // Skip external requests
   if (url.origin !== location.origin) {
+    return;
+  }
+
+  // Handle navigation requests (full document)
+  if (request.mode === 'navigate') {
+    event.respondWith(handleNavigationRequest(request));
     return;
   }
 
@@ -105,7 +114,26 @@ async function handlePageRequest(request) {
       return cachedResponse;
     }
     // Return offline page if available
-    return caches.match('/');
+    return caches.match('/offline.html');
+  }
+}
+
+// Handle navigation requests with network-first and preload
+async function handleNavigationRequest(request) {
+  try {
+    // Use navigation preload response if available
+    const preload = (event as any)?.preloadResponse ? await (event as any).preloadResponse : null;
+    const networkResponse = preload || await fetch(request);
+    if (networkResponse && networkResponse.ok) {
+      const cache = await caches.open(DYNAMIC_CACHE);
+      cache.put(request, networkResponse.clone());
+      return networkResponse;
+    }
+    throw new Error('Network failed');
+  } catch {
+    const cachedResponse = await caches.match(request);
+    if (cachedResponse) return cachedResponse;
+    return caches.match('/offline.html');
   }
 }
 

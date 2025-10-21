@@ -193,7 +193,7 @@ const orgJsonLD = {
     
     <div class="max-w-3xl mx-auto px-4 sm:px-6 w-full flex-grow">
       <Navigation />
-      <main class="py-12">
+      <main class="py-12" aria-live="polite" tabindex="-1">
         <slot />
       </main>
     </div>
@@ -217,6 +217,13 @@ const orgJsonLD = {
       document.addEventListener('DOMContentLoaded', () => {
         const pageTransition = document.getElementById('page-transition');
         const mainContent = document.querySelector('main');
+        
+        // Event name constants to avoid typos and duplicates
+        const EVENTS = {
+          ASTRO_PAGE_LOAD: 'astro:page-load',
+          SPA_CONTENT_LOADED: 'spa-content-loaded',
+          PAGE_TRANSITION_COMPLETE: 'page-transition-complete',
+        };
         
         // Initialize content with entrance animation
         if (mainContent) {
@@ -315,10 +322,10 @@ const orgJsonLD = {
               }, 200);
             }
             
-            // Dispatch custom event for content loaded
-            document.dispatchEvent(new CustomEvent('spa-content-loaded', { 
-              detail: { url }
-            }));
+            // Dispatch custom event for content loaded and notify transitions once
+            document.dispatchEvent(new CustomEvent(EVENTS.SPA_CONTENT_LOADED, { detail: { url } }));
+            document.dispatchEvent(new Event(EVENTS.ASTRO_PAGE_LOAD));
+            document.dispatchEvent(new Event(EVENTS.PAGE_TRANSITION_COMPLETE));
             
             // Scroll to top or to saved position
             window.scrollTo(0, 0);
@@ -415,6 +422,27 @@ const orgJsonLD = {
       
       // Initialize theme handling
       document.addEventListener('DOMContentLoaded', setupThemeHandling);
+
+      // Security: ensure external links don't access opener
+      document.addEventListener('DOMContentLoaded', () => {
+        document.querySelectorAll('a[target="_blank"]').forEach((a) => {
+          const rel = a.getAttribute('rel') || '';
+          if (!rel.includes('noopener')) {
+            a.setAttribute('rel', (rel ? rel + ' ' : '') + 'noopener noreferrer');
+          }
+        });
+      });
+
+      // Accessibility: focus main after SPA/page transitions
+      function focusMain() {
+        const main = document.querySelector('main');
+        if (main) {
+          if (!main.hasAttribute('tabindex')) main.setAttribute('tabindex', '-1');
+          try { (main as HTMLElement).focus({ preventScroll: true }); } catch { main.focus(); }
+        }
+      }
+      document.addEventListener('astro:page-load', focusMain);
+      document.addEventListener('page-transition-complete', focusMain);
     </script>
   </body>
 </html>

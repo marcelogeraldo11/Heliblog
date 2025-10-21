@@ -17,6 +17,18 @@
   [headers.values]
     Cache-Control = "public, max-age=31536000, immutable"
 
+# Headers for HTML documents (avoid caching)
+[[headers]]
+  for = "/*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# Also ensure homepage isn't cached
+[[headers]]
+  for = "/"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
 # Headers for images
 [[headers]]
   for = "/*.webp"

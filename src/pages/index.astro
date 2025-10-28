@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import ResponsiveImage from '../components/ResponsiveImage.astro';
 import FormattedDate from '../components/FormattedDate.astro';
 import GSAPAnimations from '../components/GSAPAnimations.astro';
 import AbstractTitleAnimation from '../components/AbstractTitleAnimation.astro';
@@ -16,6 +17,22 @@ const recentPosts = allPosts
 
 // Get all unique tags from posts
 const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].slice(0, 5);
+
+// Normalize hero image to an absolute URL when Astro.site is defined
+function processHeroImage(heroImage: string | undefined) {
+  if (!heroImage) return '';
+  try {
+    if (heroImage.startsWith('http')) {
+      return heroImage;
+    } else if (heroImage.startsWith('/')) {
+      return Astro.site ? new URL(heroImage, Astro.site).toString() : heroImage;
+    }
+    return heroImage;
+  } catch (err) {
+    console.error('Error processing heroImage on index:', heroImage, err);
+    return heroImage;
+  }
+}
 ---
 
 <Layout title="Inicio | Heliboss Blog">
@@ -99,16 +116,15 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
             
             {post.data.heroImage && (
               <div class="relative z-10 w-full aspect-video mb-4 overflow-hidden rounded-lg">
-                <img 
-                  src={post.data.heroImage} 
+                <ResponsiveImage
+                  src={processHeroImage(post.data.heroImage)}
                   alt={post.data.title}
                   class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                  loading={index === 0 ? "eager" : "lazy"}
+                  loading={index === 0 ? 'eager' : 'lazy'}
                   decoding="async"
-                  width="400"
-                  height="225"
-                  fetchpriority={index === 0 ? "high" : "auto"}
-                  style="content-visibility: auto; contain-intrinsic-size: 400px 225px;"
+                  width={400}
+                  height={225}
+                  priority={index === 0}
                 />
               </div>
             )}
@@ -440,6 +456,8 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
   
   // Re-initialize when content changes via Astro's view transitions
   document.addEventListener('astro:page-load', setupSPATransitions);
+  // Re-initialize when content changes via custom SPA system
+  document.addEventListener('spa-content-loaded', setupSPATransitions);
   
   // For compatibility with custom transition system
   document.addEventListener('page-transition-complete', setupSPATransitions);
@@ -471,6 +489,8 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))].sli
   
   // Re-inicializar en transiciones de Astro
   document.addEventListener('astro:page-load', animateHeroSpans);
+  // Re-inicializar en navegación SPA personalizada
+  document.addEventListener('spa-content-loaded', animateHeroSpans);
 </script>
 
 <style>

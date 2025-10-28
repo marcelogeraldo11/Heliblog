@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import ResponsiveImage from '../components/ResponsiveImage.astro';
 import SearchBox from '../components/SearchBox.astro';
 import { getCollection } from 'astro:content';
 
@@ -9,6 +10,22 @@ const recentPosts = allPosts
   .slice(0, 6);
 
 const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
+
+// Normalize hero image similar to blog/index for consistent thumbnails
+function processHeroImage(heroImage: string | undefined) {
+  if (!heroImage) return '';
+  try {
+    if (heroImage.startsWith('http')) {
+      return heroImage;
+    } else if (heroImage.startsWith('/')) {
+      return Astro.site ? new URL(heroImage, Astro.site).toString() : heroImage;
+    }
+    return heroImage;
+  } catch (err) {
+    console.error('Error processing heroImage on search:', heroImage, err);
+    return heroImage;
+  }
+}
 ---
 
 <Layout title="Búsqueda - Heliboss Blog" description="Busca posts, temas y contenido en el blog de Heliboss">
@@ -54,12 +71,17 @@ const allTags = [...new Set(allPosts.flatMap(post => post.data.tags || []))];
         {recentPosts.map(post => (
           <article class="bg-white dark:bg-zinc-800 rounded-lg border border-zinc-200 dark:border-zinc-700 overflow-hidden hover:shadow-lg transition-shadow duration-200">
             {post.data.heroImage && (
-              <img 
-                src={post.data.heroImage} 
-                alt={post.data.title}
-                class="w-full h-48 object-cover"
-                loading="lazy"
-              />
+              <div class="w-full h-48 overflow-hidden">
+                <ResponsiveImage
+                  src={processHeroImage(post.data.heroImage)}
+                  alt={post.data.title}
+                  class="w-full h-full object-cover"
+                  loading="lazy"
+                  decoding="async"
+                  width={400}
+                  height={225}
+                />
+              </div>
             )}
             <div class="p-6">
               <h3 class="font-bold text-lg text-zinc-900 dark:text-white mb-2 line-clamp-2">

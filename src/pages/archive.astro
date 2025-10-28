@@ -40,6 +40,22 @@ const years = Object.keys(postsByDate).map(Number).sort((a, b) => b - a);
 const totalPosts = posts.length;
 const currentYear = new Date().getFullYear();
 const postsThisYear = posts.filter(post => post.data.pubDate.getFullYear() === currentYear).length;
+
+// Normalizar heroImage para miniaturas consistentes (URL absoluta si Astro.site existe)
+function processHeroImage(heroImage: string | undefined) {
+  if (!heroImage) return '';
+  try {
+    if (heroImage.startsWith('http')) {
+      return heroImage;
+    } else if (heroImage.startsWith('/')) {
+      return Astro.site ? new URL(heroImage, Astro.site).toString() : heroImage;
+    }
+    return heroImage;
+  } catch (err) {
+    console.error('Error procesando heroImage en archivo:', heroImage, err);
+    return heroImage;
+  }
+}
 ---
 
 <Layout 
@@ -147,7 +163,7 @@ const postsThisYear = posts.filter(post => post.data.pubDate.getFullYear() === c
                               <div class="md:w-48 md:flex-shrink-0">
                                 <div class="h-48 md:h-full relative overflow-hidden">
                                   <ResponsiveImage
-                                    src={post.data.heroImage}
+                                    src={processHeroImage(post.data.heroImage)}
                                     alt={post.data.title}
                                     width={300}
                                     height={200}
